@@ -35,9 +35,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ```mermaid
 sequenceDiagram
-    actor You
+    actor Host
     actor Website
-    You->>Website: Replace this with your design
+    actor Player 1
+    actor Player 2
+    Host->>Website: Questions
+    Website->>Player 1: Questions
+    Website->>Player 2: Questions
 ```
 
 ### Key features
