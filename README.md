@@ -39,9 +39,14 @@ sequenceDiagram
     actor Player 1
     actor Player 2
     actor Website
-    Host->>Website: Questions
-    Website->>Player 1: Questions
-    Website->>Player 2: Questions
+    Host->>Website: Question
+    Website->>Player 1: Question
+    Website->>Player 2: Question
+    Player 1->>Website: Answer 1
+    Player 2->>Website: Answer 2
+    Website->>Host: Updated Answers
+    Website->>Player 1: Updated Answers
+    Website->>Player 2: Updated Answers
 ```
 
 ### Key features
