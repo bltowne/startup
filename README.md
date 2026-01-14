@@ -42,20 +42,27 @@ sequenceDiagram
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Secure login over HTTPS that allows access to specific host's game
+- Ability to enter question, answers, and points for host
+- Ability to answer question in 30 seconds for players
+- Option to play again without starting new game
+- Scoreboard that updates as answers are submitted
+- Question, answers, and points are saved and can be selected from library
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **HTML** - six HTML pages: home login page, waiting page, enter question page, view question library page, answer question page, scoreboard page
+- **CSS** - consistent styling across pages, styling adjusts to screen size
+- **React** - login, enter questions, enter answers, displaying and updating scoreboard
+- **Service** - backend service with endpoints for:
+  * login
+  * retrieving question
+  * retrieving and displaying answers
+  * third-party image on waiting page
+- **DB/Login** - stores question, answers, and points entered by host in library
+- **WebSocket** - scoreboard automatically updates as players enter answers
 
 ## 🚀 AWS deliverable
 
