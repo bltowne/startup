@@ -1,4 +1,4 @@
-# Your startup name here
+# Family Feud
 
 [My Notes](notes.md)
 
@@ -17,7 +17,7 @@ A brief description of the application here. Lorem ipsum dolor sit amet, consect
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Proper use of Markdown
+- [x] Proper use of Markdown - I used Markdown correctly and made a special effort to look for ways to practice using different features in my notes.
 - [ ] A concise and compelling elevator pitch
 - [ ] Description of key features
 - [ ] Description of how you will use each technology
