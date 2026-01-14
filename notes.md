@@ -1,5 +1,28 @@
 # CS 260 Notes
 
+## DON'T FORGET!
+
+Commit often!
+1. Pull the repository's latest changes from GitHub
+```
+git pull
+```
+2. Make changes to the code
+ - If you create a new file, make sure to add it
+ ```
+ git add test.md
+ ```
+3. Commit the changes
+```
+git commit -am "add a comment"
+```
+4. Push the changes to GitHub
+```
+git push
+```
+
+# Start of Default Notes
+
 [My startup - Simon](https://simon.cs260.click)
 
 ## Helpful links
