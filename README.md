@@ -12,7 +12,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] A concise and compelling elevator pitch - I added an elevator pitch tailored towards homesick college students.
 - [x] Description of key features - I added a detailed list of the most notable features of the application.
 - [x] Description of how you will use each technology - I named at least one way I will be implementing each technology.
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references. - I added an image that includes sketches of all html pages and a basic map of how the application will run.
 
 ### Elevator pitch
 
@@ -20,7 +20,7 @@ Moving away from home has its highs and lows. I definitely don't miss curfew but
 
 ### Design
 
-![Design image](placeholder.png)
+![Design image](IMG_4697.jpg)
 
 This sequence diagram shows how the host and players interact with the backend to enter questions (for the host) and answers (for the players).
 
