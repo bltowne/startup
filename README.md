@@ -36,9 +36,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 ```mermaid
 sequenceDiagram
     actor Host
-    actor Website
     actor Player 1
     actor Player 2
+    actor Website
     Host->>Website: Questions
     Website->>Player 1: Questions
     Website->>Player 2: Questions
