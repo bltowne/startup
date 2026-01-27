@@ -58,6 +58,72 @@ Common Elements
  - svg - scalable vector graphic content
  - iframe - inline frame of another HTML page
 
+User Data Input
+ - form - input container and submission
+ ```
+ <form action="form.html" method="post">
+ ```
+ - fieldset - labeled input grouping
+ ```
+ <fieldset> ... </fieldset>
+ ```
+ - input - multiple types of user input
+ ```
+ <input type="" />
+ ```
+ - select - selection dropdown
+ ```
+ <select><option>1</option></select>
+ ```
+ - optgroup - grouped selection dropdown
+ ```
+ <optgroup><option>1</option></optgroup>
+ ```
+ - option - selection option
+ ```
+ <option selected>option2</option>
+ ```
+ - textarea - multiline text input
+ ```
+ <textarea></textarea>
+ ```
+ - label - individual input label
+ ```
+ <label for="range">Range: </label>
+ ```
+ - output - output of input
+ ```
+ <output for="range">0</output>
+ ```
+ - meter - display value with a known range
+ ```
+ <meter min="0" max="100" value="50"></meter>
+ ```
+
+Input Element Types
+ - text - single line textual value
+ - password - obscursed password
+ - email - email address
+ - tel - telephone number
+ - url - url address
+ - number - numerical value
+ - checkbox - inclusive selection
+ - radio - exclusive selection
+ - range - range limited number
+ - date - year, month, day
+ - datetime-local - date and time
+ - month - year, month
+ - week - week of year
+ - color - color
+ - file - local file
+ - submit - button to trigger form submission
+
+Common Input Attributes
+ - name - the name of the input. This is submitted as the name of the input if used in a form
+ - disabled - disables the ability for the user to interact with the input
+ - value - the initial value of the input
+ - required - signifies that a value is required in order to be valid
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
