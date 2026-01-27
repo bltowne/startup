@@ -141,6 +141,11 @@ SVG Vector Graphics (SVG)
 Canvas
  - introduced to facilitate 2D drawing and animation, requires JavaScript support
 
+Deploy to Production
+```
+./deployFiles.sh -k <pemkey> -h <domain> -s <name of subdomain>
+```
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
