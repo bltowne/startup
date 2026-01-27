@@ -21,6 +21,43 @@ git commit -am "add a comment"
 git push
 ```
 
+### HTML
+
+Common Elements
+ - html - the page container
+ - head - header information
+ - title - title of the page
+ - meta - metadata for the page such as character set or viewport settings
+ - script - JavaScript reference. Either an external reference, or inline
+ - include - external content reference
+ - body - the entire content body of the page
+ - header - header of the main content
+ - footer - footer of the main content
+ - nav - navigational inputs
+ - main - main content of the page
+ - section - a section of the main content
+ - aside - aside content from the main content
+ - div - a block division of content
+ - span - an inline span of content
+ - h<1-9> - text heading. From h1, the highest level, down to h9, the lowest level
+ - p - a paragraph of text
+ - b - bring attention
+ - table - table
+ - tr - table row
+ - th - table header
+ - td - table data
+ - ol, ul - ordered or unordered list
+ - li - list item
+ - a - anchor the text to a hyperlink
+ - img - graphical image reference
+ - dialog - interactive component such as a confirmation
+ - form - a collection of user input
+ - input - user input field
+ - audio - audio content
+ - video - video content
+ - svg - scalable vector graphic content
+ - iframe - inline frame of another HTML page
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
