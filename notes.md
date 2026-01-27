@@ -124,6 +124,23 @@ Common Input Attributes
  - value - the initial value of the input
  - required - signifies that a value is required in order to be valid
 
+External Media Tag URLS
+ - Full path: protocol, domain name, and path to the file (https://images.pexels.com/photos/164170/pexels-photo-164170.jpeg)
+ - Relative path: file served from the same location as the HTML page rendering the element (images/photo.jpg)
+
+Audio/Video Attributes
+ - src - URL to the source audio file
+ - controls - if you want the user to be able to control the audio playback
+ - autoplay - starts the audio playing as soon as the audio file is loaded
+ - loop - keeps audio playing over and over
+***use crossorigin="anonymous" if you are requesting files from a different domain than the one serving your content
+
+SVG Vector Graphics (SVG)
+ - render graphics inline in your HTML
+
+Canvas
+ - introduced to facilitate 2D drawing and animation, requires JavaScript support
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
