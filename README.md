@@ -20,7 +20,7 @@ Moving away from home has its highs and lows. I definitely don't miss curfew but
 
 ### Design
 
-![Design image](IMG_4836.jpg)
+![Design image](IMG_4836.jpeg)
 
 This sequence diagram shows how the players interact with the backend to enter questions and answers.
 
