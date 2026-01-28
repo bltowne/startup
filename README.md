@@ -16,52 +16,50 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 ### Elevator pitch
 
-Moving away from home has its highs and lows. I definitely don't miss curfew but sometimes I crave a good old family game night. Luckily, family game night doesn't have to be as many miles away from home as you are. The Family Feud application allows you to play a classic family game with anyone, no matter the distance. One person, the "host", starts the game and enters in questions so every family can play a game tailored to what they know and love. Other people can join and compete to see who knows the most, just like in the classic Family Feud game show. It's an automatic homesickness cure. 
+Moving away from home has its highs and lows. I definitely don't miss curfew but sometimes I crave a good old family game night. Luckily, family game night doesn't have to be as many miles away from home as you are. The Family Feud application allows you to play a classic family game with anyone, no matter the distance. Up to two devices can join and compete to see who knows the most, just like in the classic Family Feud game show. It's an automatic homesickness cure. 
 
 ### Design
 
-![Design image](IMG_4697.jpg)
+![Design image](IMG_4836.jpg)
 
-This sequence diagram shows how the host and players interact with the backend to enter questions (for the host) and answers (for the players).
+This sequence diagram shows how the players interact with the backend to enter questions and answers.
 
 ```mermaid
 sequenceDiagram
-    actor Host
+    actor Question Submitter
     actor Player 1
     actor Player 2
     actor Website
-    Host->>Website: Question
+    Question Submitter->>Website: Question
     Website->>Player 1: Question
     Website->>Player 2: Question
     Player 1->>Website: Answer 1
     Player 2->>Website: Answer 2
-    Website->>Host: Updated Answers
-    Website->>Player 1: Updated Answers
-    Website->>Player 2: Updated Answers
+    Website->>Player 1: Updated Scoreboard
+    Website->>Player 2: Updated Scoreboard
 ```
 
 ### Key features
 
-- Secure login over HTTPS that allows access to specific host's game
-- Ability to enter question, answers, and points for host
-- Ability to answer question in 30 seconds for players
-- Option to play again without starting new game
+- Secure login over HTTPS that allows access to specific family's game
+- Ability to enter question, answers, and points for future games
+- Ability to answer question in 30 seconds during game
 - Scoreboard that updates as answers are submitted
-- Question, answers, and points are saved and can be selected from library
+- Waiting page with trivia questions to prep the mind for the game
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - six HTML pages: home login page, waiting page, enter question page, view question library page, answer question page, scoreboard page
+- **HTML** - five HTML pages: home login page, waiting page, enter question page, answer question page, scoreboard page
 - **CSS** - consistent styling across pages, styling adjusts to screen size
 - **React** - login, enter questions, enter answers, displaying and updating scoreboard
 - **Service** - backend service with endpoints for:
   * login
   * retrieving question
   * retrieving and displaying answers
-  * third-party image on waiting page
-- **DB/Login** - stores question, answers, and points entered by host in library
+  * third-party trivia on waiting page
+- **DB/Login** - stores question, answers, and points entered by players in library
 - **WebSocket** - scoreboard automatically updates as players enter answers
 
 ## 🚀 AWS deliverable
@@ -74,16 +72,16 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Prerequisites** - 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon HTML, GitHub linked on home page, notes in this document, more than 10 commits)
+- [x] **HTML pages** - I made five HTML pages, one for each component of my application.
+- [x] **Proper HTML element usage** - I used the BODY, NAV, MAIN, HEADER, and FOOTER HTML tags, as well as others.
+- [x] **Links** - I added links for the Home page and the Question Submission pages. The other pages will not have direct links and will instead be accessed throughout the game.
+- [x] **Text** - I added all necessary textual content.
+- [x] **3rd party API placeholder** - I added a placeholder on the waiting page for a trivia API 3rd party service call.
+- [x] **Images** - I added a picture of a clock on the waiting page.
+- [x] **Login placeholder** - I added a login placeholder on the home page, as well as a user name display on all game pages.
+- [x] **DB data placeholder** - I added database placeholders to show where questions, answers, and scores will be added after being pulled from the library. The library page represents where users will add to the database.
+- [x] **WebSocket placeholder** - I added a Websocket data placeholder on the scoreboard page where users' scores will be updated in realtime.
 
 ## 🚀 CSS deliverable
 
