@@ -146,6 +146,118 @@ Deploy to Production
 ./deployFiles.sh -k <pemkey> -h <domain> -s <name of subdomain>
 ```
 
+### CSS
+
+Three Ways to Associate CSS with HTML
+ 1. Use the style attribute of an HTML element and explicitly assign one or more declarations
+ ```
+ <p style="color:green">CSS</p>
+ ```
+ 2. Use the HTML style element to define CSS rules within the HTML document. The style element should appear in the head element of the document so that the rules apply to all elements of the document.
+ ```
+ <head>
+  <style>
+    p {
+      color:green;
+    }
+  </style>
+ </head>
+ <body>
+  <p>CSS</p>
+ <body>
+ ```
+ 3. Use the HTML link element to create a hyperlink reference to an external file containing CSS rules. The link element must appear in the head element of the document. This is the preferred way to define CSS.
+ ```
+ <link rel="stylesheet" href="styles.css" />
+ ```
+
+Precedence Rules (from highest to lowest)
+ 1. Inline Styles: style="color:black"
+ 2. ID Selectors: #myElement { color:blue; }
+ 3. Class Selectors, Attribute Selectors, and Pseudo-classes: .myClass { color: green; }
+ 4. Element Selectors and Pseudo-elements: p { color:red; }
+ 5. Universal Selector (*) and Inherited Styles
+
+The Box Model
+Margin: whitespace, external to actual styling of box
+  Border: Color, thickness, line style
+    Padding: Background color
+      Content: text, image
+*the width and height of an element is defined by the width and height of the content box
+
+SELECTORS
+
+Element Type Selector: make all elements of a specific type have the same style
+
+Combinators
+ - Descendant: a list of descendants
+    -> body section: any section that is a descendant of a body
+ - Child: a list of direct children
+    -> section > p : any p that is a direct child of a section
+ - General sibling: a list of siblings
+    -> div ~ p : any p that has a div sibling
+ - Adjacent sibling: a list of adjacent siblings
+    -> div + p : any p that has an adjacent div sibling
+
+Class Selector: like element type selector, but with specific classes of elements
+
+ID Selector: references the ID of an element. All IDs should be unique within an HTML document and so this select targets a specific element
+
+Attribute Selector: Select any element with a given attribute. You can also specify a required value for an attribute in order for the selector to match
+
+Pseudo Selector: Select based on positional relationships, mouse interactions, hyperlink visitation states, and attributes
+
+Declarations
+ - background-color: fill the background color (color: red)
+ - border: sets the border using shorthand where any of all of the values may be provided (color width style: #fad solid medium)
+ - border-radius: the size of the border radius (unit: 50%)
+ - box-shadow: creates a shadow (x-offset y-offset blu-radius color: 2px 2px 2px gray)
+ - columns: number of textual columns (number: 3)
+ - column-rule: sets the border used between columns using border shorthand (color width style: sold thin black)
+ - color: sets the text color (color: rgb(128, 0, 0))
+ - cursor: sets the cursor to display when hovering over the element (type: grab)
+ - display: defines how to display the element and its children (type: none)
+ - filter: applies a visual filter (filter-function: grayscale(30%))
+ - float: places the element to the left or right in the flow (direction: right)
+ - flex: flex layout. used for responsive design
+ - font: defines the text font using shorthand (family size style: arial 1.2em bold)
+ - grid: grid layout. used for responsive design
+ - height: sets the height of the box (unit: .25em)
+ - margin: sets the margin spacing (unit: 5px 5px 0 0)
+ - max-[width/height]: restricts the width or height to no more than the unit (unit: 20%)
+ - min-[width/height]: restricts the width or height to no less than the unit (unit: 10vh)
+ - opacity: sets how opaque the element is (number: .9)
+ - overflow: defines what happens when the content does not fix in its box ([visible/hidden/scroll/auto]: scroll)
+ - position: defines how the element is positioned in the document ([static/relative/absolute/sticky]: absolute)
+ - padding: sets the padding spacing (unit: 1em 2em)
+ - left: the horizontal value of a positioned element (unit: 10rem)
+ - text-align: defines how the text is aligned in the element ([start/end/center/justify]: end)
+ - top: the vertical value of a positioned element (unit: 50px)
+ - transform: applies a transformation to the element (transform-function: rotate(0.5turn))
+ - width: sets the width of the box (unit: 25vmin)
+ - z-index: controls the positioning of the element on the z axis (number: 100)
+
+Units (all units are prefixed with a number when used as a property value)
+ - px: number of pixels
+ - pt: number of points (1/72 of an inch)
+ - in: number of inches
+ - cm: number of centimeters
+ - %: percentage of the parent element
+ - em: multiplier of the width of the letter m in the parent's font
+ - rem: multiplier of the width of the letter m in the root's font
+ - ex: multiplier of the height of the element's font
+ - vw: percentage of the viewport's width
+ - vh: percentage of the viewport's height
+ - vmin: percentage of the viewport's smaller dimension
+ - vmax: percentage of the viewport's larger dimension
+
+Ways to Describe Color
+ - keyword (ex: red): a set of predefined colors
+ - RGB hx (ex: #00FFAA@@ or #0FA2): red, green, and blue as a hexadecimal number, with an optional alpha opacity
+ - RGB function (ex: rgb(128, 255, 128, 0.5)): red, green, and blue as a percentage or number between 0 and 255, with an optional alpha opacity percentage
+ - HSL (ex: hsl(180, 30%, 90%, 0.5)): hue, saturation, and light, with an optional opacity percentage. Hue is the position of the 365 degree color wheel (red is 0 and 255). Saturation is how gray the color is, and light is how bright the color is
+
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
