@@ -257,6 +257,31 @@ Ways to Describe Color
  - RGB function (ex: rgb(128, 255, 128, 0.5)): red, green, and blue as a percentage or number between 0 and 255, with an optional alpha opacity percentage
  - HSL (ex: hsl(180, 30%, 90%, 0.5)): hue, saturation, and light, with an optional opacity percentage. Hue is the position of the 365 degree color wheel (red is 0 and 255). Saturation is how gray the color is, and light is how bright the color is
 
+Font Families
+ - Serif: extra strokes
+ - Sans-serif: no extra strokes
+ - Fixed: all the same size
+ - Symbol: non-language characters such as arrows or emojis
+
+Options for Importing Fonts
+ 1. @font-face rule, providing font name and source location. Hosts font files on your server
+ ```
+ @font-face {
+  font-family: 'Quicksand';
+  src: url('https://cs260.click/fonts/quicksand.ttf');
+ }
+ p {
+  font-family: Quicksand;
+ }
+ ```
+ 2. Loads font files from font provider instead of hosting files on server (ex: Google Fonts. The easiest way to use Google fonts is to use a CSS import statement to reference the Google Font Service. This will automatically generate the CSS for importing the font)
+ ```
+ @import url('https://fonts.googleapis.com/css2?family=Rubik Microbe&display=swap');
+ p {
+  font-family: 'Rubik Microbe';
+ }
+ ```
+
 
 # Start of Default Notes
 
