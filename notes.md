@@ -282,6 +282,33 @@ Options for Importing Fonts
  }
  ```
 
+Animation
+Create CSS animations using the animation properties and defining keyframes for what the element should look like at different times in the animation
+ - animation-name: refers to the name of the keyframes
+ - keyframes: tell what CSS properties should be applied at different key points in the animation sequence
+  -> keyframes go from, to, with percentages in between if needed
+ - animation-duration property: specifies how long the animation should last
+ ```
+ p {
+  text-align: center;
+  font-size: 20vh;
+
+  animation-name: demo;
+  animation-duration: 3s;
+ }
+
+ @keyframes demo {
+  from {
+    font-size: 0vh
+  }
+  95% {
+    font-size: 21vh;
+  }
+  to {
+    font-size: 20vh;
+  }
+ }
+
 
 # Start of Default Notes
 
