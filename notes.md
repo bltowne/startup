@@ -309,6 +309,32 @@ Create CSS animations using the animation properties and defining keyframes for 
   }
  }
 
+Responsive Design: the ability to reconfigure the interface so the application accomodates and takes advantage of the screen's size and orientation
+
+Display Property Options
+ - none - don't display this element. The element still exists, but the browser will not render it
+ - block - display this element with a width that fills its parent element. A p or div element has block display by default
+ - inline - display this element with a width that is only as big as its content. A b or span element has inline display by default
+ - flex - display the element's children in a flexible orientation
+ - grid - display this element's children in a grid orientation
+
+Viewport Meta Tag: tells browser to not scale the page. Included in head element of all HTML pages
+```
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+```
+
+Float: moves an element to the left or right of its container element and allows inline elements to wrap around it
+
+@media: dynamically detects the size and orientation of the device and applies CSS rules to represent the strcture of the HTML in a way that accomodates the change
+
+Grid
+ 1. Start with a container element that has a bunch of child elements
+ 2. Include CSS display property with the value of grid on the container element
+ 3. Add properties
+    - grid-template-columns: specifies layout of grid columns
+    - grid-auto-rows: specifies height of rows
+    - grid-gap: specifies size of gaps
+
 
 # Start of Default Notes
 
