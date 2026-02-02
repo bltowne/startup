@@ -335,6 +335,40 @@ Grid
     - grid-auto-rows: specifies height of rows
     - grid-gap: specifies size of gaps
 
+How to Debug CSS
+ 1. Use browser's developer tool to inspect CSS properties and visualize HTML layout
+ 2. Open directory with VS Code and use Live Server extension to view HTML in Chrome browser. On the broswer, right click on text and select inspect. This will open debugger window and display Elements tab. Styles pane shows all CSS properties applied to currently selected element
+ 3. You can change any of the CSS properties, and even add new properties, directly in the debugger
+
+Bootstrap
+ - Most common CSS framework
+ - To integrate:
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+  </head>
+  <body>
+    ...
+  </body>
+</html>
+```
+ - To use Bootstrap components that require Javascript, also include this at the end of HTML body element:
+```
+<body>
+  ...
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+```
+ - To download Bootstrap and include it in source code (with current version): 
+```
+npm install bootstrap@5.3.3
+```
+ - When using in CSS, use btn
+
 
 # Start of Default Notes
 
