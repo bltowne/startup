@@ -308,6 +308,7 @@ Create CSS animations using the animation properties and defining keyframes for 
     font-size: 20vh;
   }
  }
+```
 
 Responsive Design: the ability to reconfigure the interface so the application accomodates and takes advantage of the screen's size and orientation
 
