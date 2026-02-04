@@ -4,19 +4,25 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="favicon.ico" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
         <link rel="stylesheet" href="style.css" />
         <title>Family Feud HTML</title>
     </head>
     <body>
         <header>
-            <br />
             <nav class="grid-container">
                 <a href="index.html">Home</a>
                 <a href="library.html">Question Submissions</a>
             </nav>
+            <br />
             <div class="grid-container">
-                <p>Username: teamfamily</p>
-                <p>Family Game Code: 123456</p>
+                <p>Username:<br />teamfamily</p>
+                <p>Family Game Code:<br />123456</p>
             </div>
         </header>
         <main>
@@ -26,14 +32,15 @@
             <br />
             <div class="answer-container">
                 <h3>Question? (Database Placeholder)</h3>
+                <br />
                 <form>
-                    <p>Enter Answer: <input type="text" /></p>
+                    <input type="text" placeholder="Enter answer"/>
+                    <br />
                     <input type="submit" value="Submit" />
                 </form>
             </div>
         </main>
         <footer>
-            <br />
             <p class="grid-container">Created by Bree Towne<a href="https://github.com/bltowne/startup.git">GitHub</a></p>
         </footer>
     </body>

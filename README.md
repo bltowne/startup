@@ -87,12 +87,13 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Visually appealing colors and layout. No overflowing elements.** - I did not complete this part of the deliverable.
-- [ ] **Use of a CSS framework** - I did not complete this part of the deliverable.
-- [ ] **All visual elements styled using CSS** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing using flexbox and/or grid display** - I did not complete this part of the deliverable.
-- [ ] **Use of a imported font** - I did not complete this part of the deliverable.
-- [ ] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I did not complete this part of the deliverable.
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon HTML, GitHub linked on home page, notes in this document, more than 10 commits)
+- [x] **Visually appealing colors and layout. No overflowing elements.** - I used a good color palette of blues and grays and a simple one-column layout. There are no overflowing elements.
+- [x] **Use of a CSS framework** - I used the Bootstrap CSS framework.
+- [x] **All visual elements styled using CSS** - I styled all visual elements with CSS, including images, forms, navigation, and tables.
+- [x] **Responsive to window resizing using flexbox and/or grid display** - I used flexbox display to make it responsive to windows resizing for everything except for the navigation and table elements, for which I used grid display.
+- [x] **Use of a imported font** - I added the "Bree Serif" font from Google Fonts.
+- [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - I used element, class, ID, and pseudo selectors.
 
 ## 🚀 React part 1: Routing deliverable
 
