@@ -4,25 +4,33 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="favicon.ico" />
+        <link rel="stylesheet" href="style.css" />
         <title>Family Feud HTML</title>
     </head>
     <body>
         <header>
-            <h1>Family Game Night</h1>
-            <nav>
+            <br />
+            <nav class="grid-container">
                 <a href="index.html">Home</a>
                 <a href="library.html">Question Submissions</a>
             </nav>
-            <p>Username: teamfamily<br />Family Game Code: 123456</p>
+            <div class="grid-container">
+                <p>Username: teamfamily</p>
+                <p>Family Game Code: 123456</p>
+            </div>
         </header>
         <main>
-            <h2>You have 30 seconds to answer!<br />24</h2>
-            <h3>Question? (Database Placeholder)</h3>
-            <form>
-                <p>Enter Answer: <input type="text" /></p>
-                <input type="submit" value="Submit" />
-            </form>
+            <h2>You have 30 seconds to answer!</h2>
             <br />
+            <h1>24</h1>
+            <br />
+            <div class="answer-container">
+                <h3>Question? (Database Placeholder)</h3>
+                <form>
+                    <p>Enter Answer: <input type="text" /></p>
+                    <input type="submit" value="Submit" />
+                </form>
+            </div>
         </main>
         <footer>
             <p>Created by Bree Towne    <a href="https://github.com/bltowne/startup.git">GitHub</a></p>
