@@ -371,6 +371,43 @@ npm install bootstrap@5.3.3
  - When using in CSS, use btn
 
 
+### React 1
+
+Steps to Use Node, Json, and NPM
+ 1. Create your project directory
+ 2. Initialize it for use with NPM by running
+ ```
+ npm init -y
+ ```
+ 3. Make sure 
+ ```
+ .gitignore
+ ``` 
+ file contains 
+ ```
+ node_modules
+ ```
+ 4. Install any desired packages with
+ ```
+ npm install <package name here>
+ ```
+ 5. Add 
+ ```
+ require('<package name here>')
+ ```
+  to your application's JavaScript
+ 6. Use the code the package provides in your JavaScript
+ 7. Run your code with
+ ```
+ node index.js
+ ```
+
+Debugging JavaScript
+ - Insert console.log functions that output the state of the code as it executes
+ - Use Chrome browser debugger (press F12)
+    -> set breakpoints
+
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
