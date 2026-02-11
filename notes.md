@@ -432,7 +432,34 @@ With VS Code, use this launch configuration (specifies the watch parameter whene
     }
   ]
  }
+```
 
+Insert JavaScript into HTML
+ 1. Script block: directly including it in the HTML within the content of a <script> element
+ 2. External code: Using the src attribute of the script element to reference an external JavaScript file
+ 3. Inline event attribute: putting JavaScript directly inline as part of an event attribute handler
+
+Components
+ - Reusable UI elements made of combined markup (html tag groups), CSS, and JavaScript
+ - Primary purpose: generate the user interface. This is done with the JSX (JavaScript XML) returned from a component
+ - If you don't want to directly style components with inline CSS rule sets, you can reference an external CSS file and reference the rules in JSX just like HTML (you will need to use className attribute on an element instead of class because class is a keyword in JavaScript)
+ ```
+ import './index.css';
+ ```
+ - Can have child components (components within components)
+ - Element properties: another way to pass information to React components. The component receives the properties in its constructor and then can display them when it renders
+    JSX
+    ```
+    <div>Component: <Demo who="Walke" /><div>
+    ```
+    React Component
+    ```
+    function Demo(props) {
+      return <b>Hello {props.who}</b>;
+    }
+    ```
+ - Internal state: created by calling React.useState hook function. The useState function returns a variable that contains the current state and a function to update the state
+ - Component's properties and state are used by React framework to determine the reactivity of the interface. Reactivity controls how a component reacts to actions taken by the user or events that happen within the application. Whenever a component's state or properties change, the render function for the component and all of its dependent component render functions are called
 
 # Start of Default Notes
 
