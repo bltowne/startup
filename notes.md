@@ -407,6 +407,32 @@ Debugging JavaScript
  - Use Chrome browser debugger (press F12)
     -> set breakpoints
 
+Node --watch
+```
+node --watch main.js
+```
+How to have node restart automatically and update the browser as the changes are saved
+With VS Code, use this launch configuration (specifies the watch parameter whenever debugging with VS Code)
+ 1. Press CTRL-SHIFT-P
+ 2. Type "Debug: Add configuration"
+ 3. Select "Node.js" option
+    -> This creates a launch configuration named .vscode/launch.json
+ 4. Modify configuration so that it includes the --watch parameter. It should look like this:
+ ```
+ {
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeArgs": ["--watch"],
+      "program": "${workspaceFolder}/main.js"
+    }
+  ]
+ }
+
 
 # Start of Default Notes
 
