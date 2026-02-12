@@ -87,7 +87,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Prerequisites** - I completed all prerequisites (deploying Simon HTML, GitHub linked on home page, notes in this document, more than 10 commits)
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon CSS, GitHub linked on home page, notes in this document, more than 10 commits)
 - [x] **Visually appealing colors and layout. No overflowing elements.** - I used a good color palette of blues and grays and a simple one-column layout. There are no overflowing elements.
 - [x] **Use of a CSS framework** - I used the Bootstrap CSS framework.
 - [x] **All visual elements styled using CSS** - I styled all visual elements with CSS, including images, forms, navigation, and tables.
@@ -99,6 +99,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
+- [ ] **Prerequisites** - I completed all prerequisites (deploying Simon CSS ported to Simon React, GitHub Linked on home page, notes in this document, more than 10 commits)
 - [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
 - [ ] **Components** - I did not complete this part of the deliverable.
 - [ ] **Router** - I did not complete this part of the deliverable.
