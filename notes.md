@@ -461,6 +461,24 @@ Components
  - Internal state: created by calling React.useState hook function. The useState function returns a variable that contains the current state and a function to update the state
  - Component's properties and state are used by React framework to determine the reactivity of the interface. Reactivity controls how a component reacts to actions taken by the user or events that happen within the application. Whenever a component's state or properties change, the render function for the component and all of its dependent component render functions are called
 
+Toolchains
+ - code repository - stores code in a shared, versioned location
+ - linter - removes, or warns of, non-idiomatic code usage
+ - prettier - formats code according to a shared standard
+ - transpiler - compiles code into a different format (ex: from JSX to JavaScript, TypeScript to JavaScript, SCSS to CSS)
+ - polyfill - generates backward compatible code for supporting old browser versions that do not support the latest standards
+ - bundler - packages code into bundles for delivery to the browser. This enables compatibility (ex: ES6 module support) or performance (ex: lazy loading)
+ - minifier - removes whitespace and renames variables in order to make code smaller and more efficient to deploy
+ - testing - automated tests at multiple levels to ensure correctness
+ - deployment - automated packaging and delivery of code from the development environment to the production environment
+TOOLCHAIN FOR THIS PROJECT
+ - code repository - GitHub
+ - JSX, TS, development and debugging support - Vite
+ - converting to ES6 modules and transpiling - ESBuild with Babel underneath
+ - bundling and tree shaking - Rollup
+ - CSS transpiling - PostCSS
+ - deployment - simple bash script (deployReact.sh)
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
