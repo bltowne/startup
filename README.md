@@ -99,10 +99,10 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Prerequisites** - I completed all prerequisites (deploying Simon CSS ported to Simon React, GitHub Linked on home page, notes in this document, more than 10 commits)
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon CSS ported to Simon React, GitHub Linked on home page, notes in this document, more than 10 commits)
+- [x] **Bundled using Vite** - I installed Vite and used the proper project structure.
+- [x] **Components** - I added React components for every HTML page and CSS. I also added additional header/footer components and layout components to account for having different headers on different pages.
+- [x] **Router** - I used the React Router. I also added temporary links in the header of every page to access pages that will only be accessed during the course of the game later.
 
 ## 🚀 React part 2: Reactivity deliverable
 
