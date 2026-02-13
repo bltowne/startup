@@ -9,6 +9,14 @@ export function HeaderAlt() {
             <NavLink className="nav-link" to="/library">Question Submissions</NavLink>
         </nav>
         <br />
+        <nav>
+            <p>Temporary Links:<br />
+            <NavLink className="nav-link" to="/waiting">Waiting</NavLink>
+            <NavLink className="nav-link" to="/game">Game</NavLink>
+            <NavLink className="nav-link" to="/scoreboard">Scoreboard</NavLink>
+            </p>
+        </nav>
+        <br />
         <div className="grid-container">
             <p>Username:<br />teamfamily</p>
             <p>Family Game Code:<br />123456</p>
