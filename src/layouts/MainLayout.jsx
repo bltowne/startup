@@ -1,10 +1,12 @@
-import HeaderMain from "/components/HeaderMain";
+import React from 'react';
+import { HeaderMain } from "../components/HeaderMain";
+import { Outlet } from "react-router-dom";
 
-export default function MainLayout({ children }) {
+export function MainLayout() {
     return (
         <>
             <HeaderMain />
-            <main>{children}</main>
+            <Outlet />
         </>
     );
 }

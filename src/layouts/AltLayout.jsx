@@ -1,10 +1,12 @@
-import HeaderAlt from "/components/HeaderAlt";
+import React from 'react';
+import { HeaderAlt } from "../components/HeaderAlt";
+import { Outlet } from "react-router-dom";
 
-export default function AltLayout({ children }) {
+export function AltLayout() {
     return (
         <>
             <HeaderAlt />
-            <main>{children}</main>
+            <Outlet />
         </>
     );
 }
