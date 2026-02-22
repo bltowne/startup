@@ -479,6 +479,275 @@ TOOLCHAIN FOR THIS PROJECT
  - CSS transpiling - PostCSS
  - deployment - simple bash script (deployReact.sh)
 
+### React 2
+
+JavaScript Console Objects
+ - console.log() - outputs log message
+ - console.time() - outputs how long it takes code to run
+ - console.count() - outputs how many times a block of code is called
+
+Types
+ - Primitive types
+   - Null: the type of a variable that has not been assigned a value
+   - Undefined: the type of a variable that has not been defined
+   - Boolean: true or false
+   - Number: a 64-bit signed number
+   - BigInt: a number of arbitrary magnitude
+   - String: a textual sequence of characters
+   - Symbol: a unique value
+ - Object types
+   - Object: a collection of properties represented by name-value pairs
+   ```
+   {a:3, b:'fish'}
+   ```
+   - Function: an object that has the ability to be called
+   ```
+   function a() {}
+   ```
+   - Date: calendar dates and times
+   ```
+   new Date('1995-12-17')
+   ```
+   - Array: an ordered sequence of any type
+   ```
+   [3, 'fish']
+   ```
+   - Map: a collection of key-value pairs that support efficient lookups
+   ```
+   new Map()
+   ```
+   - JSON: a lightweight data-interchange format used to share information across programs
+   ```
+   {"a":3, "b":"fish"}
+   ```
+
+Operators
+ - JavaScript supports standard mathematical operators (+ add, - subtract, * multiply, / divide, === equality)
+ - String variables: + (concatenation), === (equality)
+***Strict equality (===) and unequality (!==): these skip type conversion when computing equality. You can use == and !=, but may get unexpected results, but strict is preferred
+
+Conditionals
+ - JavaScript supports if, else, and if else
+ - Ternary operator (compact if else representation)
+ ```
+ a === 1 ? console.log(1) : console.log('not 1');
+ ```
+ - Boolean operators: &&, ||, !
+
+Loops
+ - for
+ ```
+ for (let i = 0; i < 2; i++) {
+  console.log(i);
+ }
+ // OUTPUT: 0 1
+ ```
+ - do while
+ let i = 0;
+ do {
+  console.log(i);
+  i++;
+ } while (i < 2);
+ // OUTPUT: 0 1
+ ```
+ - while
+ ```
+ let i = 0;
+ while (i < 2) {
+  console.log(i);
+  i++;
+ }
+ // OUTPUT 0 1
+ ```
+ - for in - iterates over an object's property names
+ ```
+ const obj = { a: 1, b: 'fish' };
+ for (const name in obj) {
+  console.log(name);
+ }
+ // OUTPUT: a
+ // OUTPUT: b
+ ```
+ for arrays, the object's name is the array index
+ ```
+ const arr = ['a', 'b'];
+ for (const name in arr) {
+  console.log(name);
+ }
+ // OUTPUT: 0
+ // OUTPUT: 1
+ ```
+ - for of - iterates over an iterable's property values
+ ```
+ const arr = ['a', 'b'];
+ for (const val of arr) {
+  console.log(val);
+ }
+ // OUTPUT: 'a'
+ // OUTPUT: 'b'
+ **All of the looping constructs demonstrated above allow for either a break or continue statement to abort or advance the loop
+
+String
+ - Can be defined by surrounding characters with single quotes ('), double quotes ("), or backticks (`)
+   - the meaning of single or double quotes are equivalent
+   - backtick defines a string literal that may contain JavaScript that is evaluated in place and concatenated into the string. String literal replacement specifier is declared with a dollar sign followed by a curly brace pair. Anything inside curly braces is evaluated as JavaScript
+   ```
+   console.log(`string${1 + (1 + 1)} text`)
+   ```
+   - backticks can also be used to create multiline strings without explicitly using \n
+
+String Functions
+ - length: the number of characters in the string
+ - indexOf(): the starting index of a given substring
+ - split(): split the string into an array on the given delimiter string
+ - startsWith() - true if the string has a given prefix
+ - endsWith() - true if the string has a given suffix
+ - toLowerCase() - converts all characters to lowercase
+
+Functions in JavaScript
+ - begins with function keyword, 0+ parameters, 0+ return statements, no type declaration
+ - if a parameter is not provided then the value of the parameter is undefined when the function executes; function can define default value in function declaration
+ - anonymous functions: functions assigned to variable so they can be passed as a parameter to another function
+ - functions can be declared inside other functions
+
+Arrow Functions
+ - arrow syntax replaces need for the function keyword with teh symbols => placed after the parameter declaration. Curly braces are also optional
+ - ex: function in arrow syntax that takes no parameters and always returns 3
+ ```
+ () => 3;
+ ```
+ - Return keyword is optional if no curly braces are provided and function contains single expression. Result of expression is automatically returned
+ - Closure: allows function to continue referencing its creation even after it has passed out of that scope
+
+Arrays
+ - push: add an item to the end of the array
+ ```
+ a.push(4)
+ ```
+ - pop: remove an item from the end of the array
+ ```
+ x = a.pop()
+ ```
+ - slice: return a sub-array
+ ```
+ a.slice(1,-1)
+ ```
+ - sort: run a function to sort an array in place
+ ```
+ a.sort((a,b) => b-a)
+ ```
+ - values: creates an iterator for use with a for of loop
+ ```
+ for (i of a.values()) {...}
+ ```
+ - find: find the first item satisfied by a test function
+ ```
+ a.find(i => i < 2)
+ ```
+ - forEach: run a function on each array item
+ ```
+ a.forEach(console.log)
+ ```
+ - reduce: run a function to reduce each array item to a single item
+ ```
+ a.reduce((a,c) => a + c)
+ ```
+ - map: run a function to map an array to a new array
+ ```
+ a.map(i => i+i)
+ ```
+ - filter: run a function to remove items
+ ```
+ a.filter(i => i%2)
+ ```
+ - every: run a function to test if all items match
+ ```
+ a.every(i => i < 3)
+ ```
+ - some: run a function to test if any items match
+ ```
+ a.some(i => i < 1)
+ ```
+
+JavaScript Object
+ - declare a variable of object type with object-literal syntax
+ - Static functions
+   - entries: returns an array of key value pairs
+   - keys: returns an array of keys
+   - values: returns an array of values
+ - any function that returns an object is considered a constructor and can be invoked with the new operator
+ - this: pointer to the object
+ - can use class to define objects
+ - more class keywords
+   - use extends keyword to define inheritance
+   - parameters that need to be passed to the parent class are delivered using the super function
+   - any functions defined on the child that have the same name as the parent override the parent's implementation
+   - parent's function can be explicitly accessed using super keyword
+
+JSON
+ - convert JSON to and from JavaScript using JSON.parse and JSON.stringify functions
+
+localStorage
+ - setItem(name, value) - sets a named item's value into local storage
+ - getItem(name) - gets a named item's value from local storage
+ - removeItem(name) - removes a named item from local storage
+ - clear() - clears all items in local storage
+ - localStorage value must be of type string, number, or boolean
+ - to store a JavaScript object or array, first convert to JSON string (JSON.stringify()) on insertion, and parse back to JavaScript (JSON.parse()) when retrieved
+
+Promise
+ - allows main rendering thread to continue while some action is executed in the background
+ - use for long running or blocking tasks
+ - possible states
+   - pending: currently running asynchronously
+   - fulfilled: completed successfully
+   - rejected: failed to complete
+ - set state to fulfilled when things complete correctly or to rejected when an error happens (promise executor function takes resolve and reject functions as parameters)
+ - promise object has three functions: then, catch, finally
+   - then: called if promise is fulfilled
+   - catch: called if promise is rejected
+   - finally: always called after all processing is completed
+
+Async/Await syntax
+ - async: wraps execution of a promise and removed need to chain functions
+   - turns any function into an asynchronous function, so it can in turn make asynchronous requests
+   - declares that a function returns a promise
+ - await: block until the promise state moves to fulfilled, or throws exception if state moves to rejected
+ - combining async with await, you can create code that is asynchronous but still maintains the flow of the code without explicitly using callbacks
+
+Destructuring
+ - process of pulling individual items out of an existing one, or removing structure
+ - example of destructuring arrays
+ ```
+ const a = [1, 2, 4, 5];
+ // destructure the first two items from a, into the new variables b and c
+ const [b, c] = a;
+ console.log(b, c);
+ // OUTPUT: 1, 2
+ ```
+ - React makes extensive use of destructuring when you pass parameters to components and create state
+ - example of React deconstructing object
+ ```
+ function Clicker({ initialCount }) {
+  const [count, updateCount] = React.useState(initialCount);
+  return <div onClick={() => updateCount(count + 1)}>Click Count: {count}</div>;
+ }
+ const root = ReactDOM.createRoot(document.getElementById('root'));
+ root.render(<Clicker initialCount={3} />);
+ ```
+
+Reactivity
+ - React enables reactivity with three major pieces of a React component: props, state, render
+ - React keeps a table of state values for every component and records requested state in the table whenever an updateState method is called
+
+Hooks
+ - React hooks allow React function style components to be able to do everything that a class style component can do and more
+ - useState: declare and update state in a function component
+ - useEffect: represent lifecycle effects (ex: run a function every time the component completes a rendering)
+   - useEffect callback is called by default every time the component is rendered (to change, add second parameter with dependencies to useEffect call)
+ - hooks must be called at top scope of function and can't be called inside loop or conditional
+
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
