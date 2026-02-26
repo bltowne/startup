@@ -1,5 +1,6 @@
 import React from 'react';
 import "../app.css";
+import { useNavigate } from "react-router-dom";
 
 export function Home({ setUser, setGameCode }) {
 
@@ -18,11 +19,17 @@ export function Home({ setUser, setGameCode }) {
     function JoinGame() {
         console.log('login' + text);
         localStorage.setItem('username', text);
-
+        setUser(text);
+        localStorage.setItem('gameCode', code);
+        setGameCode(code);
     }
 
     function textChange(e) {
         setText(e.target.value);
+    }
+
+    function codeChange(e) {
+        setCode(e.target.value);
     }
 
     return (
@@ -42,7 +49,7 @@ export function Home({ setUser, setGameCode }) {
                 {/* <form method="get" action="waiting.html"> */}
                     <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
                     <br />
-                    <input type="text" id="gamecode" name="gamecode" placeholder="Enter Family Game Code" required />
+                    <input type="text" id="gamecode" name="gamecode" onChange={codeChange} placeholder="Enter Family Game Code" required />
                     <br />
                     <input type="submit" value="Submit" onClick={JoinGame}/>
                 {/* </form> */}

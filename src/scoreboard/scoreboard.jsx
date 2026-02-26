@@ -1,13 +1,13 @@
 import React from 'react';
 import "../app.css";
 
-export function Scoreboard() {
+export function Scoreboard( { user } ) {
   return (
     <main>
         <h1>SCOREBOARD (Websocket Placeholder)</h1>
         <div className="score-container">
             <div className="gray-scoreboard">
-                <h2>Team A</h2><h4>150</h4>
+                <h2>{user}</h2><h4>150</h4>
             </div>
             <div className="gray-scoreboard">
                 <h2>Team B</h2><h4>120</h4>

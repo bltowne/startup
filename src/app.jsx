@@ -24,7 +24,7 @@ export default function App() {
                     <Route element={<AltLayout user={user} gameCode={gameCode} />} >
                         <Route path="/waiting" element={<Waiting />} />
                         <Route path="/game" element={<Game />} />
-                        <Route path="/scoreboard" element={<Scoreboard />} />
+                        <Route path="/scoreboard" element={<Scoreboard user={user} />} />
                     </Route>
                 </Routes>
             </div>
