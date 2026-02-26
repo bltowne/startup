@@ -11,21 +11,23 @@ import { Library } from './library/library';
 import { Scoreboard } from './scoreboard/scoreboard';
 
 export default function App() {
-  return (
-    <BrowserRouter>
-        <div className="body">
-            <Routes>
-                <Route element={<MainLayout />} >
-                    <Route path="/" element={<Home />} />
-                    <Route path="/library" element={<Library />} />
-                </Route>
-                <Route element={<AltLayout />} >
-                    <Route path="/waiting" element={<Waiting />} />
-                    <Route path="/game" element={<Game />} />
-                    <Route path="/scoreboard" element={<Scoreboard />} />
-                </Route>
-            </Routes>
-        </div>
-    </BrowserRouter>
-  );
+    const [user, setUser] = React.useState(localStorage.getItem('username') || null);
+    const [gameCode, setGameCode] = React.useState(localStorage.getItem('gameCode') || null);
+    return (
+        <BrowserRouter>
+            <div className="body">
+                <Routes>
+                    <Route element={<MainLayout />} >
+                        <Route path="/" element={<Home setUser={setUser} setGameCode={setGameCode} />} />
+                        <Route path="/library" element={<Library />} />
+                    </Route>
+                    <Route element={<AltLayout user={user} gameCode={gameCode} />} >
+                        <Route path="/waiting" element={<Waiting />} />
+                        <Route path="/game" element={<Game />} />
+                        <Route path="/scoreboard" element={<Scoreboard />} />
+                    </Route>
+                </Routes>
+            </div>
+        </BrowserRouter>
+    );
 }

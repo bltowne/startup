@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
 
-export function HeaderAlt() {
+export function HeaderAlt( { user , gameCode } ) {
   return (
     <header>
         <nav className="grid-container">
@@ -18,8 +18,8 @@ export function HeaderAlt() {
         </nav>
         <br />
         <div className="grid-container">
-            <p>Username:<br />teamfamily</p>
-            <p>Family Game Code:<br />123456</p>
+            <p>Username:<br />{user}</p>
+            <p>Family Game Code:<br />{gameCode}</p>
         </div>
     </header>
   );

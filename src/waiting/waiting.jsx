@@ -2,6 +2,12 @@ import React from 'react';
 import "../app.css";
 
 export function Waiting() {
+  const [trivia, setTrivia] = React.useState("Loading...");
+
+  React.useEffect(() => {
+    setTrivia("Trivia API Placeholder");
+  }, []);
+
   return (
     <main>
         <h1>WAITING FOR OTHER PLAYERS</h1>
@@ -10,7 +16,7 @@ export function Waiting() {
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcNjoC9122qU7rOuPhqvmegbqfTOMQ6H4sKw&s" alt="Tick Tock" />
         <br />
         <h2>Trivia while you wait?</h2>
-        <p className="answer-container">Trivia API Placeholder</p>
+        <p className="answer-container">{trivia}</p>
     </main>
   );
 }
