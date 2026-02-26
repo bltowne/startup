@@ -17,6 +17,10 @@ export function Game() {
     return () => clearTimeout(timer);
   }, [remainingTime, navigate]);
 
+  function getQuestion() {
+    // placeholder function
+  }
+
   return (
     <main>
         <h2>You have {time} seconds to answer!</h2>
@@ -24,7 +28,7 @@ export function Game() {
         <h1>{remainingTime}</h1>
         <br />
         <div className="answer-container">
-            <h3>Question? (Database Placeholder)</h3>
+            <h3>{getQuestion()}</h3>
             <br />
             <form>
                 <input type="text" placeholder="Enter answer"/>
