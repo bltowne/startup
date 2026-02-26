@@ -6,6 +6,7 @@ export function Home({ setUser, setGameCode }) {
 
     const [text, setText] = React.useState('');
     const [code, setCode] = React.useState(0);
+    const navigate = useNavigate();
 
     function NewGame() {
         console.log('login' + text);
@@ -14,6 +15,7 @@ export function Home({ setUser, setGameCode }) {
         const newCode = Math.floor(100000 + Math.random() * 900000);
         setGameCode(newCode);
         localStorage.setItem('gameCode', newCode);
+        navigate('/waiting');
     }
 
     function JoinGame() {
@@ -22,6 +24,7 @@ export function Home({ setUser, setGameCode }) {
         setUser(text);
         localStorage.setItem('gameCode', code);
         setGameCode(code);
+        navigate('/waiting');
     }
 
     function textChange(e) {
@@ -37,22 +40,18 @@ export function Home({ setUser, setGameCode }) {
             <h2>Welcome to Family Game Night!</h2>
             <div className="gray-html">
                 <h3>Start a New Game</h3>
-                {/* <form method="get" action="waiting.html"> */}
-                    <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
-                    <br />
-                    <input type="submit" value="Submit" onClick={NewGame}/>
-                {/* </form> */}
+                <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
+                <br />
+                <input type="submit" value="Submit" onClick={NewGame}/>
             </div>
             <br />
             <div className="gray-html">
                 <h3>Join an Existing Game</h3>
-                {/* <form method="get" action="waiting.html"> */}
-                    <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
-                    <br />
-                    <input type="text" id="gamecode" name="gamecode" onChange={codeChange} placeholder="Enter Family Game Code" required />
-                    <br />
-                    <input type="submit" value="Submit" onClick={JoinGame}/>
-                {/* </form> */}
+                <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
+                <br />
+                <input type="text" id="gamecode" name="gamecode" onChange={codeChange} placeholder="Enter Family Game Code" required />
+                <br />
+                <input type="submit" value="Submit" onClick={JoinGame}/>
             </div>
         </main>
     );

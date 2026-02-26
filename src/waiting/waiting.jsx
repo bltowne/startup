@@ -1,12 +1,22 @@
 import React from 'react';
 import "../app.css";
+import { useNavigate } from "react-router-dom";
 
 export function Waiting() {
   const [trivia, setTrivia] = React.useState("Loading...");
+  const [time, setTimer] = React.useState(5);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setTrivia("Trivia API Placeholder");
   }, []);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/game');
+    }, time * 1000);
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   return (
     <main>
