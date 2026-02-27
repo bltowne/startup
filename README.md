@@ -108,9 +108,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Prerequisites** - I completed all prerequisites (deploying Simon React, GitHub linked on home page, notes in this document, more than 10 commits)
-- [ ] **All functionality implemented or mocked out** - I did not complete this part of the deliverable.
-- [ ] **Hooks** - I did not complete this part of the deliverable.
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon React, GitHub linked on home page, notes in this document, more than 10 commits)
+- [x] **All functionality implemented or mocked out** - I implemented all the user functionality, including logging in, accessing questions from storage, checking if the answer is right, and calculating scores. I did my best to mock out functionality for the websocket multiplayer components by writing code as if there was another player in the game.
+- [x] **Hooks** - I mostly used useState hooks, but also used useReact hooks for much of the timed or mocked functionality. Every page has hooks.
 
 ## 🚀 Service deliverable
 
