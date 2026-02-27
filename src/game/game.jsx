@@ -6,6 +6,17 @@ export function Game() {
   const navigate = useNavigate();
   const [time, setTimer] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(30);
+  const [text, setText] = React.useState('');
+  const data = JSON.parse(localStorage.getItem('data'));
+  const [randomIndex, setRandomIndex] = React.useState(0);
+  const [answer, setAnswer] = React.useState('');
+
+  React.useEffect(() => {
+    if (data.length > 0) {
+      const index = Math.floor(Math.random() * data.length);
+      setRandomIndex(index);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (remainingTime === 0) {
@@ -18,7 +29,26 @@ export function Game() {
   }, [remainingTime, navigate]);
 
   function getQuestion() {
-    // placeholder function
+    if (!data) {
+      return "There are no questions available. Please submit a question through the Question Submissions page.";
+    }
+    return data[randomIndex].question;
+  }
+
+  function textChange(e) {
+    setText(e.target.value);
+  }
+
+  function checkAnswer() {
+    for (let i = 0; i < data[randomIndex].answers.length; i++) {
+      if (text.toLowerCase() === data[randomIndex].answers[i].toLowerCase()) {
+        setAnswer(data[randomIndex].answers[i]);
+        navigate('/scoreboard');
+        return;
+      }
+    }
+    alert("Try again");
+    return;
   }
 
   return (
@@ -30,11 +60,9 @@ export function Game() {
         <div className="answer-container">
             <h3>{getQuestion()}</h3>
             <br />
-            <form>
-                <input type="text" placeholder="Enter answer"/>
-                <br />
-                <input type="submit" value="Submit" />
-            </form>
+              <input type="text" placeholder="Enter answer" onChange={textChange}/>
+              <br />
+              <input type="submit" value="Submit" onClick={checkAnswer}/>
         </div>
     </main>
   );
