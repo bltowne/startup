@@ -2,12 +2,12 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Scoreboard( { user } ) {
+export function Scoreboard( { user, index } ) {
     const navigate = useNavigate();
 
     return (
         <main>
-            <h1>SCOREBOARD</h1>
+            <h1>SCOREBOARD {index}</h1>
             <div className="score-container">
                 <div className="gray-scoreboard">
                     <h2>{user}</h2><h4>150</h4>

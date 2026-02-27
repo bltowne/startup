@@ -13,6 +13,7 @@ import { Scoreboard } from './scoreboard/scoreboard';
 export default function App() {
     const [user, setUser] = React.useState(localStorage.getItem('username') || null);
     const [gameCode, setGameCode] = React.useState(localStorage.getItem('gameCode') || null);
+    const [index, setIndex] = React.useState(0);
     return (
         <BrowserRouter>
             <div className="body">
@@ -23,8 +24,8 @@ export default function App() {
                     </Route>
                     <Route element={<AltLayout user={user} gameCode={gameCode} />} >
                         <Route path="/waiting" element={<Waiting />} />
-                        <Route path="/game" element={<Game />} />
-                        <Route path="/scoreboard" element={<Scoreboard user={user} />} />
+                        <Route path="/game" element={<Game setIndex={setIndex} index={index} />} />
+                        <Route path="/scoreboard" element={<Scoreboard user={user} index={index} />} />
                     </Route>
                 </Routes>
             </div>

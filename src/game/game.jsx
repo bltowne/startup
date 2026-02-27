@@ -2,19 +2,18 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Game() {
+export function Game( { index, setIndex } ) {
   const navigate = useNavigate();
   const [time, setTimer] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(30);
   const [text, setText] = React.useState('');
   const data = JSON.parse(localStorage.getItem('data'));
-  const [randomIndex, setRandomIndex] = React.useState(0);
   const [answer, setAnswer] = React.useState('');
 
   React.useEffect(() => {
     if (data.length > 0) {
       const index = Math.floor(Math.random() * data.length);
-      setRandomIndex(index);
+      setIndex(index);
     }
   }, []);
 
@@ -30,9 +29,10 @@ export function Game() {
 
   function getQuestion() {
     if (!data) {
-      return "There are no questions available. Please submit a question through the Question Submissions page.";
+      alert("No questions available. Please submit questions to the Question Submissions page before playing.");
+      return;
     }
-    return data[randomIndex].question;
+    return data[index].question;
   }
 
   function textChange(e) {
@@ -40,9 +40,9 @@ export function Game() {
   }
 
   function checkAnswer() {
-    for (let i = 0; i < data[randomIndex].answers.length; i++) {
-      if (text.toLowerCase() === data[randomIndex].answers[i].toLowerCase()) {
-        setAnswer(data[randomIndex].answers[i]);
+    for (let i = 0; i < data[index].answers.length; i++) {
+      if (text.toLowerCase() === data[index].answers[i].toLowerCase()) {
+        setAnswer(data[index].answers[i]);
         navigate('/scoreboard');
         return;
       }
