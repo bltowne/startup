@@ -2,13 +2,12 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Game( { index, setIndex } ) {
+export function Game( { index, setIndex, answer, setAnswer } ) {
   const navigate = useNavigate();
   const [time, setTimer] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(30);
   const [text, setText] = React.useState('');
   const data = JSON.parse(localStorage.getItem('data'));
-  const [answer, setAnswer] = React.useState('');
 
   React.useEffect(() => {
     if (data.length > 0) {
