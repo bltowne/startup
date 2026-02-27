@@ -16,6 +16,7 @@ export function Library() {
         setQuestion("");
         setAnswers(Array(8).fill(""));
         setPoints(Array(8).fill(""));
+        alert("Question submitted! Thank you for contributing to the question library.");
     }
 
     function processData(newData) {
