@@ -7,6 +7,7 @@ export function Home({ setUser, setGameCode }) {
     const [text, setText] = React.useState('');
     const [code, setCode] = React.useState(0);
     const navigate = useNavigate();
+    const gameCodes = JSON.parse(localStorage.getItem('gameCodes')) || [];
 
     function NewGame() {
         console.log('login' + text);
@@ -15,6 +16,8 @@ export function Home({ setUser, setGameCode }) {
         const newCode = Math.floor(100000 + Math.random() * 900000);
         setGameCode(newCode);
         localStorage.setItem('gameCode', newCode);
+        gameCodes.push(newCode);
+        localStorage.setItem('gameCodes', JSON.stringify(gameCodes));
         navigate('/waiting');
     }
 
@@ -22,9 +25,15 @@ export function Home({ setUser, setGameCode }) {
         console.log('login' + text);
         localStorage.setItem('username', text);
         setUser(text);
-        localStorage.setItem('gameCode', code);
-        setGameCode(code);
-        navigate('/waiting');
+        for (let i = 0; i < gameCodes.length; i++) {
+            if (Number(code) === Number(gameCodes[i])) {
+                setGameCode(code);
+                localStorage.setItem('gameCode', code);
+                navigate('/waiting');
+                return;
+            }
+        }
+        alert("Game code not found. Please check the code and try again.");
     }
 
     function textChange(e) {
