@@ -29,6 +29,7 @@ export function Game( { index, setIndex, answer, setAnswer } ) {
   function getQuestion() {
     if (!data) {
       alert("No questions available. Please submit questions to the Question Submissions page before playing.");
+      navigate('/home');
       return;
     }
     return data[index].question;
