@@ -748,6 +748,181 @@ Hooks
  - hooks must be called at top scope of function and can't be called inside loop or conditional
 
 
+### Service
+
+The Internet
+ - dig console utility: look up IP address for any domain name
+ - traceroute console utility: determine hops in a connection
+
+TCP/IP (Internal protocol suite) layers
+ - Application: functionality like web browsing (ex: HTTPS)
+ - Transport: moving connection information packets (ex: TCP)
+ - Internet: establishing connections (ex: IP)
+ - Link: physical connections (ex: fiber, hardware)
+
+Web Servers
+ - web server: physical computing device
+ - web service: provides a web application functionality
+ - every web server allows for access to multiple services by referring to a different port number for each service
+ - service gateway (reverse proxy): simple web service that listens on the common HTTPS port 443, looks at the request URL, and maps it to other services running on different ports (ex: Caddy)
+ - microservices: web services that providde a single functional purpose
+
+Web Services
+ - To make a web service request, supply the URL of the web service to the fetch function built into browser
+ - All files running on browser comprise the frontend of application
+ - Functionality provided by web service represents the backend of application
+ - Functions provided by a web service are called endpoints (or sometimes APIs). Web service endpoints are accessed from frontend JavaScript with fetch function
+
+URL
+ - Uniform Resource Locator (URL) represents location of a web resource
+ - Naming Convention: <scheme>://<domain name>:<port>/<path>?<parameters>#<anchor>
+ - Scheme: the protocol required to ask for the resource
+   - For web applications, this is usually HTTPS, but could be any internal protocal such as FTP or MAILTO
+ - Domain name: the domain name that owns the resource represented by the URL
+   - Ex: byu.edu
+ - Port: specifies the numbered network port used to connect to the domain server
+   - Lower number ports are reserved for common internet protocols, higher number ports can be used for any purpose
+   - The default port is 80 if the scheme is HTTP, or 443 if the scheme is HTTPS
+ - Path: the path to the resource on the domain
+   - The resource does not have to physically be located on the file system with this path. It can be a logical path representing endpoint parameters, a database table, or an object schema
+   - Ex: /school/byu/user/8014
+ - Parameters: represent a list of key value pairs
+   - Usually it provides additional qualifiers on resource represented by the path
+   - This might be a filter on the returned resource or how to highlight the resource.
+   - The parameters are also sometimes called the query string
+   - Ex: filter=names&highlight=intro,summary
+ - Anchor: represents sub-location in the resource
+   - For HTML pages this represents a request for the browser to automatically scroll to the element with an ID that matches the anchor
+    - The anchor is sometimes called the hash or fragment ID
+    - Ex: summary
+ - URN: Uniform Resource Name, a unique resource name that does not specify location information
+ - URI: Uniform Resource Identifier, general resource identifier that could refer to either a URL or a URN
+
+Ports
+ - Common port numbers
+   - 20: File Transfer Protocol (FTP) for data transfer
+   - 22: Secure Shell (SSH) for connecting to remote devices
+   - 25: Simple Mail Transfer Protocol (SMTOP) for sending email
+   - 53: Domain Name System (DNS) for looking up IP addresses
+   - 80: Hypertext Transfer Protocol (HTTP) for web requests
+   - 110: Post Office Protocol (POP3) for retrieving email
+   - 123: Network Time Protocol (NTP) for managing time
+   - 161: Simple Network Management Protocol (SNMP) for managing network devices such as routers or printers
+   - 194: Internet Relay Chat (IRC) for chatting
+   - 443: HTTP Secure (HTTPS) for secure web requests
+
+HTTP
+ - Request syntax
+ ```
+ <verb> <url path, parameters, anchor> <version>
+ [<header key: value>]*
+ [
+    <body>
+ ]
+ ```
+ - Response syntax
+ ```
+ <version> <status code> <status string>
+ [<header key: value>]*
+ [
+    <body>
+ ]
+ ```
+ - Common HTTP request verbs
+   - GET: get the requested resource. This can represent a request to get a single resource or a resource representing a list of resources
+   - POST: create a new resource. The body of the request contains the resource. The response should include a unique ID of the newly created resource
+   - PUT: update a resource. Either the URL path, HTTP header, or body must contain the unique ID of the resource being updated. The body of the request should contain the updated resource. The body of the response may contain the resulting updated resource.
+   - DELETE: delete a resource. Either the URL path or HTTP header must contain the unique ID of the resource to delete
+   - OPTIONS: get metadata about a resource. Usually only HTTP headers are returned. The resource itself is not returned
+ - Status Codes
+   - 1xx - informational
+   - 2xx - success
+   - 3xx - redirect to some other location, or that the previously cached resource is still valid
+   - 4xx - client errors. The request is invalid
+   - 5xx - server errors. The request cannot be satisfied due to an error on the server
+   - Common Codes
+     - 100 Continue - the service is working on the request
+     - 200 Success - the requested resource was found and returned as appropriate
+     - 201 Created - the request was successful and a new resource was created
+     - 204 No Content - the request was successful but no resource is returned
+     - 304 Not Modified - the cached version of the resource is still valid
+     - 307 Permanent redirect - the resource is no longer at the requested location. The new location is specified in the response location header
+     - 308 Temporary redirect - the resource is temporarily lcoated at a different location. The temporary location is specified in the response location header
+     - 400 Bad request - the request was malformed or invalid
+     - 401 Unauthorized - the request did not provide a valid authentication token
+     - 403 Forbidden - the provided authentication token is not authorized for the resource
+     - 404 Not found - an unknown resource was requested
+     - 408 Request timeout - the request takes too long
+     - 409 Conflict - the provided resource represents an out of date version of the resource
+     - 418 I'm a teapot - the service refuses to brew coffee in a teapot
+     - 429 Too many requests - the client is making too many requests in too short of a time period
+     - 500 Internal server error - the server failed to properly process the request
+     - 503 Service unavailable - the server is temporarily down. The client should try again with an exponential back off
+ - Headers: specify metadata about a request or response (things like how to handle security, caching, data formats, and cookies)
+   - Authorization: a token that authorized the user making the request
+     - Ex: Bearer bGciOiJUIzl1Nilsl
+   - Accept: the format the client accepts. This may include wildcards
+     - Ex: image/*
+   - Content-Type: the format of the content being sent. These are described using standard MIME types
+     - Ex: text/html; charset=utf-8
+   - Cookie: key value pairs that are generated by the server and stored on the client
+     - Ex: SessionID=39s8cgj34;csrftoken=9dck2
+   - Host: the domain name of the server. This is required in all requests
+     - Ex: info.cern.ch
+   - Origin: identifies the origin that caused the request. A host may only allow requests from specific origins
+     - Ex: cs260.click
+   - Access-Control-Allow-Origin: server response of what origins can make a request. This may include a wildcard
+     - Ex: https://cs260.click
+   - Content-Length: the number of bytes contained in the response
+     - Ex: 368
+   - Cache-Control: tells the client how it can cache the response
+     - Ex: public, max-age=604800
+   - User-Agent: the client application making the request
+     - Ex: Mozilla/5.0 (Macintosh)
+
+Troubleshoot 502
+1. SSH into your production environment in a bash terminal using the command:
+```
+ssh -i <path to pem file> ubuntu@<your domain name>
+```
+2. Navigate to affected service directory
+3. List out the files inside your directory using ls. Check to see if all files that need to be there are present.
+4. Check to see that your javascript file containing the code to start your node server is named index.js (needs to be all lowercase)
+5. Check to see that your file structure is correct. For example, that you have a node_modules directory, a public folder with frontend code inside, server files in project root directory, and the proper configuration files
+6. Check to see if the port listed inside of index.js is correct for the service
+*If you edited anything to fix the problem in your production environment, run ```pm2 restart <service>``` to restart your service and check your browser (make sure you replace <service> with the service you are trying to fix)
+Additional Steps (if the server error still won't resolve)
+7. While still in your production environment and in the affected service directory, run ```node index.js```
+8. If an error message appears in the terminal then read it carefully and fix the problem
+   - If a node module is missing, you need to install the module (npm install <module>) in your development environment, and redeploy
+   - If a file is missing, or a file path is incorrect, move the file to the proper location / fix the file path in your development environment and redeploy
+9. If no error message appears then you can verify that the service is reachable from your browser. If that works press ctrl c to stop the node server from running. This means that the problem is with how PM2 is configured to run your service. Check to see what PM2 is running with the command ```pm2 describe <service>```
+
+SOP AND CORS
+ - Same Origin Policy (SOP) - only allows JavaScript to make requests to a domain if it is the same domain that the user is currently viewing
+ - Cross Origin Resource Sharing (CORS) - allows client (eg browser) to specify origin of a request and then let the server respond with what origins are allowed
+
+Endpoints
+ - often called Application Programming Interface (API)
+ - considerations when designing endpoints
+   - Grammatical: with HTTP everything is a resource. You act on the resource with an HTTP verb
+   - Readable: the resource you are referencing with an HTTP request should be clearly readable in the URL path
+   - Discoverable: as you expose resources that contain other resources you can provide the endpoints for the aggregated resources. This makes it so someone using your endpoints only needs to remember the top level endpoint and then they can discover everything else
+   - Compaitible: when you build your endpoints you want to make it so that you can add new functionality without breaking existing clients. Usually this means that the clients of your service endpoints should ignore anything that they don't understand
+   - Simple: keeping your endpoints focused on the primary resources of your applciation helps to avoid the temptation to add endpoints that duplicate or create parallel access to primary resources
+   - Documented: it is highly suggested that you make use of tools that help create, use, and maintain documentation of your service endpoints in order to provide client libraries for your endpoints and a sandbox for experimentation
+ - Remote Procedure Calls (RPC) - expose service endpoints as simple function calls
+ - Representational State Transfer (REST) - attempts to take advantage of foundational principles of HTTP
+ - Graph QL - focuses on manipulation of data instead of a function call (RPC) or a resource (REST). The heart of GraphQL is a query that specifies the desired data and how it should be joined and filtered
+
+Account Creation and Login
+ - Three service endpoints: one to initially ```register```, a second to ```login``` on future visits, and a third to ```logout```
+   - Registration: create account (create user and auth)
+   - Login: log into account (create auth)
+   - Logout: logout of account (delete auth)
+   - Get me: returns information about authenticated user
+
+
 # Start of Default Notes
 
 [My startup - Simon](https://simon.cs260.click)
