@@ -8,7 +8,12 @@ export function Waiting() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    setTrivia("Trivia API Placeholder");
+    fetch('https://opentdb.com/api.php?amount=20&type=multiple')
+      .then((response) => response.json())
+      .then((data) => {
+        setTrivia(data.question + " " + data.correct_answer);
+      })
+      .catch();
   }, []);
 
   React.useEffect(() => {
@@ -25,7 +30,7 @@ export function Waiting() {
         <br />
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcNjoC9122qU7rOuPhqvmegbqfTOMQ6H4sKw&s" alt="Tick Tock" />
         <br />
-        <h2>Trivia while you wait?</h2>
+        <h2>Warm up your brain while you wait</h2>
         <p className="answer-container">{trivia}</p>
     </main>
   );

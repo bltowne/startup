@@ -117,9 +117,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [ ] **Prerequisites** - I completed all prerequisites (deploying Simon Service, GitHub linked on home page, notes in this document, more than 10 commits)
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
+- [ ] **Node.js/Express HTTP service** - I followed the steps to add all necessary files and code to convert my startup application into a web service using Node.js and Express.
 - [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
+- [ ] **Calls to third party endpoints** - On the waiting page, I added a call to a trivia API to generate random trivia questions.
 - [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
 - [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
 - [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
