@@ -3,6 +3,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
+const authCookieName = 'token';
 
 let users = [];
 let data = [];
@@ -70,8 +71,17 @@ apiRouter.get('/answer', async (req, res) => {
     res.send(answer);
 });
 
+const verifyAuth = async (req, res, next) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  if (user) {
+    next();
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
+  }
+};
+
 // SubmitAnswer
-apiRouter.post('/answer', async (req, res) => {
+apiRouter.post('/answer', verifyAuth, async (req, res) => {
     answer = updateAnswer(req.body);
     res.send(answer);
 });
@@ -82,6 +92,44 @@ apiRouter.post('/score', async (req, res) => {
     res.send(score);
 });
 
+function updateData(newData) {
+    data.push(newData);
+    return data;
+}
+
+function updateAnswer(newAnswer) {
+    answer.push(newAnswer);
+    return answer;
+}
+
+function updateScore(newScore) {
+    score.push(newScore);
+    return score;
+}
+
+async function createUser(username, password) {
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = {
+        username: username,
+        password: passwordHash,
+        token: uuid.v4(),
+    };
+    users.push(user);
+    return user;
+}
+
+async function findUser(field, value) {
+    if (!value) return null;
+    return users.find((user) => user[field] === value);
+}
+
+function setAuthCookie(res, token) {
+    res.cookie(authCookieName, token, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict',
+    });
+}
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
