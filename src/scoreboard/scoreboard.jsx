@@ -135,7 +135,7 @@ export function Scoreboard( { user, index, answer } ) {
                 </tbody>
             </table>
             <br />
-            <input type="button" id="button" value="Ready for Next Round" onClick={() => navigate('/waiting')} />
+            <input type="button" id="button" value="Ready for Next Round" onClick={() => navigate('/waiting')} />    <input type="button" id="button" value="Logout" onClick={() => navigate('/')} />
         </main>
     );
 }

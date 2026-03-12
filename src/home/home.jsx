@@ -4,15 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 export function Home({ setUser, setGameCode }) {
 
-    const [text, setText] = React.useState('');
+    const [user, setText] = React.useState('');
+    const [password, setPassword] = React.useState('');
     const [code, setCode] = React.useState(0);
     const navigate = useNavigate();
     const gameCodes = JSON.parse(localStorage.getItem('gameCodes')) || [];
 
     function NewGame() {
-        console.log('login' + text);
-        localStorage.setItem('username', text);
-        setUser(text);
+        console.log('login' + user);
+        localStorage.setItem('username', user);
+        setText(user);
         const newCode = Math.floor(100000 + Math.random() * 900000);
         setGameCode(newCode);
         localStorage.setItem('gameCode', newCode);
@@ -22,9 +23,9 @@ export function Home({ setUser, setGameCode }) {
     }
 
     function JoinGame() {
-        console.log('login' + text);
-        localStorage.setItem('username', text);
-        setUser(text);
+        console.log('login' + user);
+        localStorage.setItem('username', user);
+        setText(user);
         for (let i = 0; i < gameCodes.length; i++) {
             if (Number(code) === Number(gameCodes[i])) {
                 setGameCode(code);
@@ -36,8 +37,12 @@ export function Home({ setUser, setGameCode }) {
         alert("Game code not found. Please check the code and try again.");
     }
 
-    function textChange(e) {
+    function userChange(e) {
         setText(e.target.value);
+    }
+
+    function passwordChange(e) {    
+        setPassword(e.target.value);
     }
 
     function codeChange(e) {
@@ -49,18 +54,22 @@ export function Home({ setUser, setGameCode }) {
             <h2>Welcome to Family Game Night!</h2>
             <div className="gray-html">
                 <h3>Start a New Game</h3>
-                <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
+                <input type="text" id="username" name="username" onChange={userChange} placeholder="Enter your username" required />
                 <br />
-                <input type="submit" value="Submit" onClick={NewGame}/>
+                <input type="password" id="password" name="password" onChange={passwordChange} placeholder="Enter your password" required />
+                <br />
+                <input type="submit" value="Log In" onClick={NewGame}/> <input type="submit" value="Register" onClick={NewGame}/>
             </div>
             <br />
             <div className="gray-html">
                 <h3>Join an Existing Game</h3>
-                <input type="text" id="username" name="username" onChange={textChange} placeholder="Enter your username" required />
+                <input type="text" id="username" name="username" onChange={userChange} placeholder="Enter your username" required />
+                <br />
+                <input type="password" id="password" name="password" onChange={passwordChange} placeholder="Enter your password" required />
                 <br />
                 <input type="text" id="gamecode" name="gamecode" onChange={codeChange} placeholder="Enter Family Game Code" required />
                 <br />
-                <input type="submit" value="Submit" onClick={JoinGame}/>
+                <input type="submit" value="Log In" onClick={JoinGame}/> <input type="submit" value="Register" onClick={JoinGame}/>
             </div>
         </main>
     );
