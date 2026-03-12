@@ -6,6 +6,8 @@ const uuid = require('uuid');
 
 let users = [];
 let data = [];
+let score = [];
+let answer = [];
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.static('public'));
@@ -16,6 +18,69 @@ app.use(`/api`, apiRouter);
 
 
 // Add endpoints here - step 5 simon, step 6 main
+// CreateAuth
+apiRouter.post('/auth/create', async (req, res) => {
+  if (await findUser('username', req.body.username)) {
+    res.status(409).send({ msg: 'Existing user' });
+  } else {
+    const user = await createUser(req.body.username, req.body.password);
+
+    setAuthCookie(res, user.token);
+    res.send({ username: user.username });
+  }
+});
+
+// GetAuth
+apiRouter.post('/auth/login', async (req, res) => {
+  const user = await findUser('username', req.body.username);
+  if (user) {
+    if (await bcrypt.compare(req.body.password, user.password)) {
+      user.token = uuid.v4();
+      setAuthCookie(res, user.token);
+      res.send({ username: user.username });
+      return;
+    }
+  }
+  res.status(401).send({ msg: 'Unauthorized' });
+});
+
+// DeleteAuth
+apiRouter.delete('/auth/logout', async (req, res) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  if (user) {
+    delete user.token;
+  }
+  res.clearCookie(authCookieName);
+  res.status(204).end();
+});
+
+// GetData
+apiRouter.get('/data', async (req, res) => {
+    res.send(data);
+});
+
+// SubmitData
+apiRouter.post('/data', async (req, res) => {
+    data = updateData(req.body);
+    res.send(data);
+});
+
+// GetAnswer
+apiRouter.get('/answer', async (req, res) => {
+    res.send(answer);
+});
+
+// SubmitAnswer
+apiRouter.post('/answer', async (req, res) => {
+    answer = updateAnswer(req.body);
+    res.send(answer);
+});
+
+// AddToScore
+apiRouter.post('/score', async (req, res) => {
+    score = updateScore(req.body);
+    res.send(score);
+});
 
 
 app.listen(port, () => {
