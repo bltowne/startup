@@ -2,14 +2,14 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Scoreboard() {
+export function Scoreboard({ user, index, answer }) {
     const navigate = useNavigate();
     const [data, setData] = React.useState([]);
-    const [user, setUser] = React.useState('');
-    const [answer, setAnswer] = React.useState('');
-    const [index, setIndex] = React.useState(0);
 
-    const [currentScore, setCurrentScore] = React.useState(0);
+    const [currentScore, setCurrentScore] = React.useState(() => {
+        const score = JSON.parse(localStorage.getItem('currentScore'));
+        return score || 0;
+    });
 
     const [opponentScore, setOpponentScore] = React.useState(() => {
         const score = JSON.parse(localStorage.getItem('opponentScore'));
@@ -27,54 +27,11 @@ export function Scoreboard() {
     const [opponentHighlightIndex, setOpponentHighlightIndex] = React.useState(null);
 
     React.useEffect(() => {
-        fetch('/api/user')
-            .then((response) => response.json())
-            .then((user) => {
-                setUser(user);
-            });
-        fetch('/api/answer')
-            .then((response) => response.json())
-            .then((answer) => {
-                setAnswer(answer);
-            });
-        fetch('/api/index')
-            .then((response) => response.json())
-            .then((index) => {
-                setIndex(index);
-            });
         fetch('/api/data')
             .then((response) => response.json())
             .then((data) => {
                 localStorage.setData('data', JSON.stringify(data));
             });
-        fetch('/api/score')
-            .then((response) => response.json())
-            .then((score) => {
-                setCurrentScore(score);
-            });
-        fetch('/api/score', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: JSON.stringify({ score: currentScore }),
-        });
-    }, []);
-
-
-    React.useEffect(() => {
-        for (let i = 0; i < data[index].answers.length; i++) {
-            if (answer.toLowerCase() === data[index].answers[i].toLowerCase()) {
-                const points = parseInt(data[index].points[i]);
-                
-                setCurrentScore(prevScore => {
-                    const newScore = prevScore + points;
-                    localStorage.setItem('score', JSON.stringify(newScore));
-                    return newScore;
-                });
-                return;
-            }
-        }
     }, []);
 
     React.useEffect(() => {

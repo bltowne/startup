@@ -2,13 +2,12 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Home({ setUser, setGameCode }) {
+export function Home() {
 
     const [user, setText] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [code, setCode] = React.useState(0);
     const navigate = useNavigate();
-    const [displayError, setDisplayError] = React.useState('');
 
     async function loginOrCreate(endpoint, nextStep) {
         const response = await fetch(endpoint, {
@@ -18,14 +17,18 @@ export function Home({ setUser, setGameCode }) {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
         });
-        if (response?.status === 200) {
+
+        console.log("status: " + response.status);
+
+        if (response.ok) {
             console.log('login' + user);
             setText(user);
             localStorage.setItem('username', user);
             await nextStep();
         } else {
-            const body = await response.json();
-            setDisplayError(`Error: ${body.msg}`);
+            const text = await response.text();
+            console.log("server response: " + text);
+            alert('Error: Please try again');
         }
     }
 
@@ -54,8 +57,7 @@ export function Home({ setUser, setGameCode }) {
         if (response?.status === 200) {
             navigate('/waiting');
         } else {
-            const body = await response.json();
-            setDisplayError(`Error: ${body.msg}`);
+            setDisplayError(`Error: Game does not exist.`);
         }
     }
 

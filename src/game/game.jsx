@@ -2,7 +2,7 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Game() {
+export function Game({ index, setIndex, answer, setAnswer }) {
   const navigate = useNavigate();
   const [time, setTimer] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(30);
@@ -15,16 +15,6 @@ export function Game() {
       .then((data) => {
         if (Array.isArray(data)) {
           setData(data);
-          if (data.length > 0) {
-            const index = Math.floor(Math.random() * data.length);
-            fetch('/api/index', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: JSON.stringify({ index: index }),
-            });
-          }
         }
       });
   }, []);
@@ -39,17 +29,10 @@ export function Game() {
     return () => clearTimeout(timer);
   }, [remainingTime, navigate]);
 
-  async function checkAnswer() {
+  function checkAnswer() {
     for (let i = 0; i < data[index].answers.length; i++) {
       if (text.toLowerCase() === data[index].answers[i].toLowerCase()) {
         setAnswer(data[index].answers[i]);
-        await fetch('/api/answer', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify({ answer: data[index].answers[i] }),
-        });
         navigate('/scoreboard');
         return;
       }
@@ -59,6 +42,7 @@ export function Game() {
   }
 
   function getQuestion() {
+    setIndex(Math.floor(Math.random() * data.length));
     if (data.length === 0) {
       navigate('/home')
       alert("No questions available. Please submit questions to the Question Submissions page before playing.");
