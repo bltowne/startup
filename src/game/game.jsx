@@ -2,7 +2,7 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 
-export function Game( { index, setIndex, answer, setAnswer } ) {
+export function Game() {
   const navigate = useNavigate();
   const [time, setTimer] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(30);
@@ -17,7 +17,13 @@ export function Game( { index, setIndex, answer, setAnswer } ) {
           setData(data);
           if (data.length > 0) {
             const index = Math.floor(Math.random() * data.length);
-            setIndex(index);
+            fetch('/api/index', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: JSON.stringify({ index: index }),
+            });
           }
         }
       });

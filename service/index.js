@@ -11,6 +11,7 @@ let codes = [];
 let data = [];
 let score = 0;
 let answer = '';
+let index = 0;
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.static('public'));
@@ -58,6 +59,11 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
+// GetUser
+apiRouter.get('/user', async (req, res) => {
+  res.send(currentUser);
+});
+
 // CreateCode
 apiRouter.post('/code', async (req, res) => {
     const user = req.body.username;
@@ -89,6 +95,17 @@ apiRouter.post('/data', async (req, res) => {
     res.send(data);
 });
 
+// CreateIndex
+apiRouter.post('/index', async (req, res) => {
+    index = req.body;
+    res.send(index);
+});
+
+// GetIndex
+apiRouter.get('/index', async (req, res) => {
+    res.send(index);
+});
+
 // GetAnswer
 apiRouter.get('/answer', async (req, res) => {
     res.send(answer);
@@ -107,6 +124,11 @@ const verifyAuth = async (req, res, next) => {
 apiRouter.post('/answer', verifyAuth, async (req, res) => {
     answer = updateAnswer(req.body);
     res.send(answer);
+});
+
+// GetScore
+apiRouter.get('/score', async (req, res) => {
+    res.send(score);
 });
 
 // AddToScore

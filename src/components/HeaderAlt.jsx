@@ -1,7 +1,23 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
 
-export function HeaderAlt( { user , gameCode } ) {
+export function HeaderAlt() {
+  const [user, setUser] = React.useState(null);
+  const [gameCode, setGameCode] = React.useState(null);
+
+  React.useEffect(() => {
+    fetch('/api/user')
+      .then((response) => response.json())
+      .then((user) => {
+        setUser(user);
+      });
+    fetch('/api/code')
+      .then((response) => response.json())
+      .then((code) => {
+        setGameCode(code);
+      });
+  }, []);
+
   return (
     <header>
         <nav className="grid-container">
