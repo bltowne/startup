@@ -96,6 +96,13 @@ export function Scoreboard() {
         return () => clearTimeout(timer);
     }, []);
 
+    async function logout() {
+        await fetch('/api/auth/logout', {
+            method: 'DELETE',
+        });
+        navigate('/');
+    }
+
     function getQuestion() {
         return data[index].question;
     }
@@ -170,7 +177,7 @@ export function Scoreboard() {
                 </tbody>
             </table>
             <br />
-            <input type="button" id="button" value="Ready for Next Round" onClick={() => navigate('/waiting')} />    <input type="button" id="button" value="Logout" onClick={() => navigate('/')} />
+            <input type="button" id="button" value="Ready for Next Round" onClick={() => navigate('/waiting')} />    <input type="button" id="button" value="Logout" onClick={logout} />
         </main>
     );
 }

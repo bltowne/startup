@@ -116,12 +116,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Prerequisites** - I completed all prerequisites (deploying Simon Service, GitHub linked on home page, notes in this document, more than 10 commits)
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon Service, GitHub linked on home page, notes in this document, more than 10 commits)
 - [x] **Node.js/Express HTTP service** - I followed the steps to add all necessary files and code to convert my startup application into a web service using Node.js and Express.
 - [x] **Static middleware for frontend** - I added the static middleware line of code into the backend and the frontend is served up correctly.
 - [x] **Calls to third party endpoints** - On the waiting page, I added a call to a trivia API to generate random trivia questions.
-- [x] **Backend service endpoints** - I added CreateAuth, GetAuth, DeleteAuth, CreateCode, JoinCode, GetData, SubmitData, GetAnswer, SubmitAnswer, and AddToScore backend service endpoints along with helper functions to index.js.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
+- [x] **Backend service endpoints** - I added multiple backend service endpoints along with helper functions to index.js.
+- [x] **Frontend calls service endpoints** - I added frontend calls to the service endpoints, exclusively using the backend storage instead of localStorage.
 - [x] **Supports registration, login, logout, and restricted endpoint** - I added CreateAuth, GetAuth, and DeleteAuth endpoints, as well as adding a verifyAuth function that will prevent the user from submitting an answer without being authorized.
 - [x] **Uses BCrypt to hash passwords** - I added BCrypt to the create user helper function and the GetAuth endpoint to hash passwords.
 
