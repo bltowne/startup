@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const authCookieName = 'token';
 
 let users = [];
+let codes = [];
 let data = [];
 let score = [];
 let answer = [];
@@ -18,7 +19,6 @@ let apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
 
-// Add endpoints here - step 5 simon, step 6 main
 // CreateAuth
 apiRouter.post('/auth/create', async (req, res) => {
   if (await findUser('username', req.body.username)) {
@@ -53,6 +53,26 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   }
   res.clearCookie(authCookieName);
   res.status(204).end();
+});
+
+// CreateCode
+apiRouter.post('/code', async (req, res) => {
+    const user = req.body.username;
+    const newCode = Math.floor(100000 + Math.random() * 900000);
+    codes.push({ code: newCode, players: [user] });
+    res.send({ code: newCode.code });
+});
+
+// JoinCode
+apiRouter.post('/code/join', async (req, res) => {
+    const { user, code } = req.body;
+    const game = codes.find((c) => c.code === Number(code));
+    if (game && !game.players.includes(user)) {
+        game.players.push(user);
+        res.send({ msg: 'Joined game' });
+    } else {
+        res.status(404).send({ msg: 'Game not found' });
+    }
 });
 
 // GetData

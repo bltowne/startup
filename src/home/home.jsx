@@ -8,33 +8,55 @@ export function Home({ setUser, setGameCode }) {
     const [password, setPassword] = React.useState('');
     const [code, setCode] = React.useState(0);
     const navigate = useNavigate();
-    const gameCodes = JSON.parse(localStorage.getItem('gameCodes')) || [];
+    const [displayError, setDisplayError] = React.useState('');
 
-    function NewGame() {
-        console.log('login' + user);
-        localStorage.setItem('username', user);
-        setText(user);
-        const newCode = Math.floor(100000 + Math.random() * 900000);
-        setGameCode(newCode);
-        localStorage.setItem('gameCode', newCode);
-        gameCodes.push(newCode);
-        localStorage.setItem('gameCodes', JSON.stringify(gameCodes));
+    async function loginOrCreate(endpoint, nextStep) {
+        const response = await fetch(endpoint, {
+            method: 'post',
+            body: JSON.stringify({ username: user, password: password }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+        });
+        if (response?.status === 200) {
+            console.log('login' + user);
+            setText(user);
+            localStorage.setItem('username', user);
+            await nextStep();
+        } else {
+            const body = await response.json();
+            setDisplayError(`Error: ${body.msg}`);
+        }
+    }
+
+    async function NewGame() {
+        const response = await fetch('/api/code', {
+            method: 'post',
+            body: JSON.stringify({ username: user }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+        });
+        const { code } = await response.json();
+        setGameCode(code);
+        localStorage.setItem('gameCode', code);
         navigate('/waiting');
     }
 
-    function JoinGame() {
-        console.log('login' + user);
-        localStorage.setItem('username', user);
-        setText(user);
-        for (let i = 0; i < gameCodes.length; i++) {
-            if (Number(code) === Number(gameCodes[i])) {
-                setGameCode(code);
-                localStorage.setItem('gameCode', code);
-                navigate('/waiting');
-                return;
-            }
+    async function JoinGame() {
+        const response = await fetch('/api/code/join', {
+            method: 'post',
+            body: JSON.stringify({ username: user, code: code }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+        });
+        if (response?.status === 200) {
+            navigate('/waiting');
+        } else {
+            const body = await response.json();
+            setDisplayError(`Error: ${body.msg}`);
         }
-        alert("Game code not found. Please check the code and try again.");
     }
 
     function userChange(e) {
@@ -58,7 +80,7 @@ export function Home({ setUser, setGameCode }) {
                 <br />
                 <input type="password" id="password" name="password" onChange={passwordChange} placeholder="Enter your password" required />
                 <br />
-                <input type="submit" value="Log In" onClick={NewGame}/> <input type="submit" value="Register" onClick={NewGame}/>
+                <input type="submit" value="Log In" onClick={() => loginOrCreate('/api/auth/login', NewGame)}/> <input type="submit" value="Register" onClick={() => loginOrCreate('/api/auth/create', NewGame)}/>
             </div>
             <br />
             <div className="gray-html">
@@ -69,7 +91,7 @@ export function Home({ setUser, setGameCode }) {
                 <br />
                 <input type="text" id="gamecode" name="gamecode" onChange={codeChange} placeholder="Enter Family Game Code" required />
                 <br />
-                <input type="submit" value="Log In" onClick={JoinGame}/> <input type="submit" value="Register" onClick={JoinGame}/>
+                <input type="submit" value="Log In" onClick={() => loginOrCreate('/api/auth/login', JoinGame)}/> <input type="submit" value="Register" onClick={() => loginOrCreate('/api/auth/create', JoinGame)}/>
             </div>
         </main>
     );
