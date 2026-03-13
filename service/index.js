@@ -6,10 +6,11 @@ const uuid = require('uuid');
 const authCookieName = 'token';
 
 let users = [];
+let currentUser = '';
 let codes = [];
 let data = [];
-let score = [];
-let answer = [];
+let score = 0;
+let answer = '';
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.static('public'));
@@ -27,6 +28,7 @@ apiRouter.post('/auth/create', async (req, res) => {
     const user = await createUser(req.body.username, req.body.password);
 
     setAuthCookie(res, user.token);
+    currentUser = user;
     res.send({ username: user.username });
   }
 });
@@ -38,6 +40,7 @@ apiRouter.post('/auth/login', async (req, res) => {
     if (await bcrypt.compare(req.body.password, user.password)) {
       user.token = uuid.v4();
       setAuthCookie(res, user.token);
+      currentUser = user;
       res.send({ username: user.username });
       return;
     }
@@ -118,12 +121,12 @@ function updateData(newData) {
 }
 
 function updateAnswer(newAnswer) {
-    answer.push(newAnswer);
+    answer = newAnswer;
     return answer;
 }
 
 function updateScore(newScore) {
-    score.push(newScore);
+    score += newScore;
     return score;
 }
 
