@@ -4,17 +4,24 @@ import { useNavigate } from "react-router-dom";
 
 export function Game({ index, setIndex, answer, setAnswer }) {
   const navigate = useNavigate();
-  const [time, setTimer] = React.useState(30);
+  const [time] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(30);
   const [text, setText] = React.useState('');
   const [data, setData] = React.useState([]);
+  const [question, setQuestion] = React.useState("Loading question...");
 
   React.useEffect(() => {
     fetch('/api/data')
       .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setData(data);
+      .then((fetchedData) => {
+        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+          const randomIndex = Math.floor(Math.random() * fetchedData.length);
+          setData(fetchedData);
+          setIndex(randomIndex);
+          setQuestion(fetchedData[randomIndex].question);
+        } else {
+          alert("No questions available. Please submit questions to the Question Submissions page before playing.");
+          navigate('/');
         }
       });
   }, []);
@@ -30,6 +37,7 @@ export function Game({ index, setIndex, answer, setAnswer }) {
   }, [remainingTime, navigate]);
 
   function checkAnswer() {
+    if (!data[index]) return;
     for (let i = 0; i < data[index].answers.length; i++) {
       if (text.toLowerCase() === data[index].answers[i].toLowerCase()) {
         setAnswer(data[index].answers[i]);
@@ -39,16 +47,6 @@ export function Game({ index, setIndex, answer, setAnswer }) {
     }
     alert("Try again");
     return;
-  }
-
-  function getQuestion() {
-    setIndex(Math.floor(Math.random() * data.length));
-    if (data.length === 0) {
-      navigate('/home')
-      alert("No questions available. Please submit questions to the Question Submissions page before playing.");
-      return;
-    }
-    return data[index].question;
   }
 
   function textChange(e) {
@@ -62,7 +60,7 @@ export function Game({ index, setIndex, answer, setAnswer }) {
         <h1>{remainingTime}</h1>
         <br />
         <div className="answer-container">
-            <h3>{getQuestion()}</h3>
+            <h3>{question}</h3>
             <br />
               <input type="text" placeholder="Enter answer" onChange={textChange}/>
               <br />

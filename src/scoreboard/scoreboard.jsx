@@ -29,20 +29,36 @@ export function Scoreboard({ user, index, answer }) {
     React.useEffect(() => {
         fetch('/api/data')
             .then((response) => response.json())
-            .then((data) => {
-                localStorage.setData('data', JSON.stringify(data));
+            .then((fetchedData) => {
+                setData(fetchedData);
             });
     }, []);
 
     React.useEffect(() => {
+        if (!data[index] || !answer) return;
+        for (let i = 0; i < data[index].answers.length; i++) {
+            if (answer.toLowerCase() === data[index].answers[i].toLowerCase()) {
+                const points = parseInt(data[index].points[i]);
+                setCurrentScore(prevScore => {
+                    const newScore = prevScore + points;
+                    localStorage.setItem('score', JSON.stringify(newScore));
+                    return newScore;
+                });
+                return;
+            }
+        }
+    }, [data, index, answer]);
+
+    React.useEffect(() => {
+        if (!data[index]) return;
+
         const timer = setTimeout(() => {
             let newIndex = 5;
             if (newIndex === index) {
                 newIndex = (newIndex + 1);
             }
-            console.log(newIndex);
             setOpponentHighlightIndex(newIndex);
-            const points = parseInt(data[index].points[5]);
+            const points = parseInt(data[index].points[5]) || 0;
             setOpponentScore(prevScore => {
                 const newScore = prevScore + points;
                 localStorage.setItem('opponentScore', JSON.stringify(newScore));
@@ -51,7 +67,7 @@ export function Scoreboard({ user, index, answer }) {
         }, 30000);
 
         return () => clearTimeout(timer);
-    }, []);
+    }, [data, index]);
 
     async function logout() {
         await fetch('/api/auth/logout', {
@@ -61,15 +77,15 @@ export function Scoreboard({ user, index, answer }) {
     }
 
     function getQuestion() {
-        return data[index].question;
+        return data[index]?.question || "Loading question...";
     }
 
     function getAnswer(i) {
-        return data[index].answers[i];
+        return data[index]?.answers[i] || "";
     }
 
     function getPoints(i) {
-        return data[index].points[i];
+        return data[index]?.points[i] || 0;
     }
 
     function highlightAnswer(i) {

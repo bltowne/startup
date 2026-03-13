@@ -11,9 +11,12 @@ export function Waiting() {
     fetch('https://opentdb.com/api.php?amount=20&type=multiple')
       .then((response) => response.json())
       .then((data) => {
-        setTrivia(data.question + " " + data.correct_answer);
+        const randomIndex = Math.floor(Math.random() * data.results.length);
+        const question = data.results[randomIndex];
+        setTrivia(question.question + " " + question.correct_answer);
       })
-      .catch();
+      .catch((err) =>
+        setTrivia("Error loading questions"));
   }, []);
 
   React.useEffect(() => {

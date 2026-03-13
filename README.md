@@ -121,7 +121,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Static middleware for frontend** - I added the static middleware line of code into the backend and the frontend is served up correctly.
 - [x] **Calls to third party endpoints** - On the waiting page, I added a call to a trivia API to generate random trivia questions.
 - [x] **Backend service endpoints** - I added multiple backend service endpoints along with helper functions to index.js.
-- [x] **Frontend calls service endpoints** - I added frontend calls to the service endpoints, exclusively using the backend storage instead of localStorage.
+- [x] **Frontend calls service endpoints** - I added frontend calls to the service endpoints and replaced most localStorage calls.
 - [x] **Supports registration, login, logout, and restricted endpoint** - I added CreateAuth, GetAuth, and DeleteAuth endpoints, as well as adding a verifyAuth function that will prevent the user from submitting an answer without being authorized.
 - [x] **Uses BCrypt to hash passwords** - I added BCrypt to the create user helper function and the GetAuth endpoint to hash passwords.
 

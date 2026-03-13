@@ -17,9 +17,6 @@ export function Home() {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
         });
-
-        console.log("status: " + response.status);
-
         if (response.ok) {
             console.log('login' + user);
             setText(user);
@@ -41,7 +38,7 @@ export function Home() {
             },
         });
         const { code } = await response.json();
-        setGameCode(code);
+        setCode(code);
         localStorage.setItem('gameCode', code);
         navigate('/waiting');
     }
@@ -54,10 +51,11 @@ export function Home() {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
         });
-        if (response?.status === 200) {
+        if (response.ok) {
+            localStorage.setItem('gameCode', code);
             navigate('/waiting');
         } else {
-            setDisplayError(`Error: Game does not exist.`);
+            alert("Error: Game does not exist.");
         }
     }
 
@@ -70,7 +68,7 @@ export function Home() {
     }
 
     function codeChange(e) {
-        setCode(e.target.value);
+        setCode(Number(e.target.value));
     }
 
     return (
