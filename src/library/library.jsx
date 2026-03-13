@@ -6,28 +6,23 @@ export function Library() {
     const [answers, setAnswers] = React.useState(Array(8).fill(""));
     const [points, setPoints] = React.useState(Array(8).fill(""));
 
-    function submitData(question, answers, points) {
+    async function submitData(question, answers, points) {
         const newData = {
             question: question,
             answers: answers,
             points: points
         };
-        processData(newData);
+        await fetch('/api/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify(newData),
+        });
         setQuestion("");
         setAnswers(Array(8).fill(""));
         setPoints(Array(8).fill(""));
         alert("Question submitted! Thank you for contributing to the question library.");
-    }
-
-    function processData(newData) {
-        let data = [];
-        const dataText = localStorage.getItem('data');
-        if (dataText) {
-            data = JSON.parse(dataText);
-        }
-
-        data.push(newData);
-        localStorage.setItem('data', JSON.stringify(data));
     }
 
     function getQuestion(e) {
