@@ -922,6 +922,127 @@ Account Creation and Login
    - Logout: logout of account (delete auth)
    - Get me: returns information about authenticated user
 
+### Database
+
+Putting files on server isn't a good production level solution because:
+ - server only has 8 GB by default
+ - servers are replaced as new versions are released, so any state stored on the server will be lost
+ - server's storage is not backed up
+ - with multiple application servers, you can't assume the server you uploaded data to is the one you request a download from
+You want a dedicated storage service with:
+ - durability guarantees
+ - not tied to compute capacity
+ - can be accessed by multiple application servers
+
+Major Cloud Storage Providers
+ - Amazon S3 - free 5 GB for 12 months
+   - Advantages
+     - Unlimited capacity
+     - Only pay for storage you use
+     - Optimized for global access
+     - Keeps multiple redundant copies of every file
+     - You can version files
+     - Performant
+     - Supports metadata tags
+     - You can make files publicly available directly from S3
+     - You can keep files private and only accessible to your application
+   - Steps to use
+     - Create S3 bucket to store data in
+     - Get credentials so that your application can access the bucket
+     - Use the credentials in your application (don't include in code, esp GitHub repository)
+     - Use the SDK to write, list, read, and delete files from the bucket
+ - Google Cloud Storage - free 5 GB
+ - Microsoft Azure Storage - free 5 GB for 12 months
+ - IBM Cloud Object Storage - lite plan with 25 GB
+ - MinIO
+ - OpenStack Swift
+
+Specialty Data Services
+ - MySQL: relational queries
+ - Redis: memory cached objects
+ - ElasticSearch: ranked free text
+ - MongoDB: JSON objects
+ - DynamoDB: key value pairs
+ - Neo4J: graph based data
+ - InfluxDB: time series data
+
+Using MongoDB
+ - Basic setup
+ ```
+ const { MongoClient } = require('mongodb');
+ const config = require('./dbConfig.json');
+
+ const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+
+ const client = new MongoClient(url);
+ const db = client.db('rental');
+ const collection = db.collection('house');
+
+ async function main() {
+   try {
+     // add all the following database code here
+     
+   } finally {
+     client.close();
+   }
+ } 
+ 
+ main();
+ ```
+ - Insert JavaScript object as a Mongo document (if database or collection doesn't exist, Mongo will automatically create them for you and assign a unique ID to every insertion)
+ ```
+ const house = {
+   name: 'Beachfront views',
+   summary: 'From your bedroom to the beach, no shoes required',
+   property_type: 'Condo',
+   beds: 1,
+ };
+ const insertResult = await collection.insertOne(house);
+ ```
+ - Query (if you don't supply any parameters to find function it will return all documents in the collection)
+ ```
+ const cursor = collection.find();
+ const rentals = await cursor.toArray();
+ rentals.forEach((i) => console.log(i));
+ ```
+ ```
+ const query = { property_type: 'Condo', beds: { $lt: 2 } };
+ const options = {
+   sort: { name: -1 },
+   limit: 10,
+ };
+
+ const cursor = collection.find(query, options);
+ const rentals = await cursor.toArray();
+ rentals.forEach((i) => console.log(i));
+ ```
+ - Update (updateMany updates everything that matches the query, updateOne only updates the first matching document)
+ ```
+ const query = { property_type: 'Condo', beds: { $lt: 2 } };
+ await collection.updateMany(query, { $set: { beds: 2 } });
+ ```
+ - Delete (can delete with deleteOne and providing document's ID as query)
+ ```
+ const query = { property_type: 'Condo', beds: { $lt: 2 } };
+ await collection.deleteMany(query);
+ ```
+ ```
+ const insertResult = await collection.insertOne(house);
+
+ const deleteQuery = { _id: insertResult.insertedId };
+ await collection.deleteOne(deleteQuery);
+ ```
+ - Testing connection on startup
+ ```
+ try {
+   await db.command({ ping: 1 });
+   console.log(`DB connected to ${config.hostname}`);
+ } catch (ex) {
+   console.log(`Error with ${url} because ${ex.message}`);
+   process.exit(1);
+ }
+ ```
+
 
 # Start of Default Notes
 
