@@ -1,4 +1,6 @@
 node_modules/
 simon-react/
 simon-service/
+simon-db/
 service/node_modules/
+service/dbConfig.json
