@@ -6,10 +6,6 @@ const uuid = require('uuid');
 const authCookieName = 'token';
 const DB = require('./database.js');
 
-let users = [];
-let codes = [];
-let data = [];
-
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.static('public'));
 app.use(express.json());
@@ -37,6 +33,7 @@ apiRouter.post('/auth/login', async (req, res) => {
   if (user) {
     if (await bcrypt.compare(req.body.password, user.password)) {
       user.token = uuid.v4();
+      await DB.updateUser(user);
       setAuthCookie(res, user.token);
       res.send({ username: user.username });
       return;
@@ -49,7 +46,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
-    delete user.token;
+    await DB.updateUserRemoveAuth(user);
   }
   res.clearCookie(authCookieName);
   res.status(204).end();
@@ -86,17 +83,18 @@ const verifyAuth = async (req, res, next) => {
 
 // GetData
 apiRouter.get('/data', verifyAuth, async (req, res) => {
+    const data = await DB.getData();
     res.send(data);
 });
 
 // SubmitData
 apiRouter.post('/data', async (req, res) => {
-    data = updateData(req.body);
+    const data = await updateData(req.body);
     res.send(data);
 });
 
-function updateData(newData) {
-    data.push(newData);
+async function updateData(newData) {
+    await DB.addData(newData);
     return data;
 }
 
@@ -107,13 +105,16 @@ async function createUser(username, password) {
         password: passwordHash,
         token: uuid.v4(),
     };
-    users.push(user);
+    await DB.addUser(user);
     return user;
 }
 
 async function findUser(field, value) {
     if (!value) return null;
-    return users.find((user) => user[field] === value);
+    if (field === 'token') {
+      return DB.getUserByToken(value);
+    }
+    return DB.getUser(value);
 }
 
 function setAuthCookie(res, token) {
