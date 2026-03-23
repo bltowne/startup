@@ -41,7 +41,7 @@ export function Scoreboard({ user, index, answer }) {
                 const points = parseInt(data[index].points[i]);
                 setCurrentScore(prevScore => {
                     const newScore = prevScore + points;
-                    localStorage.setItem('score', JSON.stringify(newScore));
+                    localStorage.setItem('currentScore', JSON.stringify(newScore));
                     return newScore;
                 });
                 return;

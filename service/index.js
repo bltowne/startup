@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const authCookieName = 'token';
+const DB = require('./database.js');
 
 let users = [];
 let codes = [];
