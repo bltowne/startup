@@ -37,9 +37,13 @@ async function updateUserRemoveAuth(user) {
   await userCollection.updateOne({ email: user.email }, { $unset: { token: 1} });
 }
 
-async function addCode() {}
+async function addCode(code) {
+  await codeCollection.insertOne(code);
+}
 
-function getCode() {}
+function getCode(code) {
+  return codeCollection.findOne({ code: code});
+}
 
 async function addData() {}
 
