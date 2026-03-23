@@ -45,6 +45,10 @@ function getCode(code) {
   return codeCollection.findOne({ code: code});
 }
 
-async function addData() {}
+async function addData(data) {
+  await dataCollection.insertOne(data);
+}
 
-function getData() {}
+function getData() {
+  return dataCollection.find({}).toArray();
+}
