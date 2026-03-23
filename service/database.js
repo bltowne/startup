@@ -16,3 +16,21 @@ const dataCollection = db.collection('data');
     process.exit(1);
   }
 })();
+
+function getUser(email) {}
+
+function getUserByToken(token) {}
+
+async function addUser(user) {}
+
+async function updateUser(user) {}
+
+async function updateUserRemoveAuth(user) {}
+
+async function addCode() {}
+
+function getCode() {}
+
+async function addData() {}
+
+function getData() {}
