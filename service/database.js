@@ -52,3 +52,15 @@ async function addData(data) {
 function getData() {
   return dataCollection.find({}).toArray();
 }
+
+module.exports = {
+  getUser,
+  getUserByToken,
+  addUser,
+  updateUser,
+  updateUserRemoveAuth,
+  addCode,
+  getCode,
+  addData,
+  getData,
+};
