@@ -17,15 +17,25 @@ const dataCollection = db.collection('data');
   }
 })();
 
-function getUser(email) {}
+function getUser(email) {
+  return userCollection.findOne({ email: email});
+}
 
-function getUserByToken(token) {}
+function getUserByToken(token) {
+  return userCollection.findOne({ token: token});
+}
 
-async function addUser(user) {}
+async function addUser(user) {
+  await userCollection.insertOne(user);
+}
 
-async function updateUser(user) {}
+async function updateUser(user) {
+  await userCollection.updateOne({ email: user.email }, { $set: user });
+}
 
-async function updateUserRemoveAuth(user) {}
+async function updateUserRemoveAuth(user) {
+  await userCollection.updateOne({ email: user.email }, { $unset: { token: 1} });
+}
 
 async function addCode() {}
 
