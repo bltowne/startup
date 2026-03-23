@@ -56,16 +56,20 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 apiRouter.post('/code', async (req, res) => {
     const user = req.body.username;
     const newCode = Math.floor(100000 + Math.random() * 900000);
-    codes.push({ code: newCode, players: [user] });
+    const game = { code: newCode, players: [user] }
+    await DB.addCode(game);
     res.send({ code: newCode });
 });
 
 // JoinCode
 apiRouter.post('/code/join', async (req, res) => {
     const { username, code } = req.body;
-    const game = codes.find((c) => c.code === Number(code));
+    const game = await DB.getCode(Number(code));
     if (game && !game.players.includes(username)) {
-        game.players.push(username);
+        await codeCollection.updateOne(
+          { code: Number(code) },
+          { $push: { players: username }}
+        );
         res.send({ msg: 'Joined game' });
     } else {
         res.status(404).send({ msg: 'Game not found' });
@@ -89,14 +93,9 @@ apiRouter.get('/data', verifyAuth, async (req, res) => {
 
 // SubmitData
 apiRouter.post('/data', async (req, res) => {
-    const data = await updateData(req.body);
+    const data = await DB.addData(req.body);
     res.send(data);
 });
-
-async function updateData(newData) {
-    await DB.addData(newData);
-    return data;
-}
 
 async function createUser(username, password) {
     const passwordHash = await bcrypt.hash(password, 10);
