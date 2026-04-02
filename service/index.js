@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const uuid = require('uuid');
 const authCookieName = 'token';
 const DB = require('./database.js');
+const { peerProxy } = require('./peerProxy.js');
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.static('public'));
@@ -128,4 +129,7 @@ const httpService = app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
 
-peerProxy(httpService);
+peerProxy(httpService, {
+  getUserByToken: DB.getUserByToken,
+  getCode: DB.getCode
+});

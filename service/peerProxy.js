@@ -1,13 +1,33 @@
 const { WebSocketServer, WebSocket } = require('ws');
 
-function peerProxy(httpServer) {
-  // Create a websocket object
+function peerProxy(httpServer, services) {
   const socketServer = new WebSocketServer({ server: httpServer });
+  const { getUserByToken, getCode } = services;
 
-  socketServer.on('connection', (socket) => {
+  const activeGames = {};
+
+  socketServer.on('connection', async (socket, request) => {
     socket.isAlive = true;
 
-    // Forward messages to everyone except the sender
+    const cookies = request.headers.cookie;
+    let token = null;
+    if (cookies) {
+        cookies.split(';').forEach(cookie => {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'token') {
+                token = value;
+            }
+        });
+    }
+
+    const user = await getUserByToken(token);
+    if (!user) {
+        socket.close();
+        return;
+    }
+    socket.username = user.username;
+    socket.gameCode = null;
+
     socket.on('message', function message(data) {
         socketServer.clients.forEach((client) => {
             if (client !== socket && client.readyState === WebSocket.OPEN) {
@@ -16,13 +36,11 @@ function peerProxy(httpServer) {
         });
     });
 
-  // Respond to pong messages by marking the connection alive
     socket.on('pong', () => {
         socket.isAlive = true;
     });
   });
 
-  // Periodically send out a ping message to make sure clients are alive
   setInterval(() => {
     socketServer.clients.forEach(function each(client) {
         if (client.isAlive === false) return client.terminate();
