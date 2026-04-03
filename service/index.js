@@ -53,29 +53,29 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
-// CreateCode
-apiRouter.post('/code', async (req, res) => {
-    const user = req.body.username;
-    const newCode = Math.floor(100000 + Math.random() * 900000);
-    const game = { code: newCode, players: [user] }
-    await DB.addCode(game);
-    res.send({ code: newCode });
-});
+// // CreateCode
+// apiRouter.post('/code', async (req, res) => {
+//     const user = req.body.username;
+//     const newCode = Math.floor(100000 + Math.random() * 900000);
+//     const game = { code: newCode, players: [user] }
+//     await DB.addCode(game);
+//     res.send({ code: newCode });
+// });
 
-// JoinCode
-apiRouter.post('/code/join', async (req, res) => {
-    const { username, code } = req.body;
-    const game = await DB.getCode(Number(code));
-    if (game && !game.players.includes(username)) {
-        await codeCollection.updateOne(
-          { code: Number(code) },
-          { $push: { players: username }}
-        );
-        res.send({ msg: 'Joined game' });
-    } else {
-        res.status(404).send({ msg: 'Game not found' });
-    }
-});
+// // JoinCode
+// apiRouter.post('/code/join', async (req, res) => {
+//     const { username, code } = req.body;
+//     const game = await DB.getCode(Number(code));
+//     if (game && !game.players.includes(username)) {
+//         await codeCollection.updateOne(
+//           { code: Number(code) },
+//           { $push: { players: username }}
+//         );
+//         res.send({ msg: 'Joined game' });
+//     } else {
+//         res.status(404).send({ msg: 'Game not found' });
+//     }
+// });
 
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
@@ -131,5 +131,5 @@ const httpService = app.listen(port, () => {
 
 peerProxy(httpService, {
   getUserByToken: DB.getUserByToken,
-  getCode: DB.getCode
+  // getCode: DB.getCode
 });

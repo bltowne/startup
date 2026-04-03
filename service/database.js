@@ -37,13 +37,13 @@ async function updateUserRemoveAuth(user) {
   await userCollection.updateOne({ username: user.username }, { $unset: { token: 1} });
 }
 
-async function addCode(game) {
-  await codeCollection.insertOne(game);
-}
+// async function addCode(game) {
+//   await codeCollection.insertOne(game);
+// }
 
-function getCode(code) {
-  return codeCollection.findOne({ code: code});
-}
+// function getCode(code) {
+//   return codeCollection.findOne({ code: code});
+// }
 
 async function addData(data) {
   await dataCollection.insertOne(data);
@@ -59,8 +59,8 @@ module.exports = {
   addUser,
   updateUser,
   updateUserRemoveAuth,
-  addCode,
-  getCode,
+  // addCode,
+  // getCode,
   addData,
   getData,
 };

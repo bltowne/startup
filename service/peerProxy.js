@@ -1,74 +1,107 @@
 const { WebSocketServer, WebSocket } = require('ws');
 
 function peerProxy(httpServer, services) {
-  const socketServer = new WebSocketServer({ server: httpServer });
-  const { getUserByToken, getCode } = services;
+    const socketServer = new WebSocketServer({ server: httpServer });
+    const { getUserByToken, getCode } = services;
 
-  const activeGames = {};
+    const activeGames = {};
 
-  socketServer.on('connection', async (socket, request) => {
-    socket.isAlive = true;
+    socketServer.on('connection', async (socket, request) => {
+        socket.isAlive = true;
 
-    const cookies = request.headers.cookie;
-    let token = null;
-    if (cookies) {
-        cookies.split(';').forEach(cookie => {
-            const [name, value] = cookie.trim().split('=');
-            if (name === 'token') {
-                token = value;
+        const cookies = request.headers.cookie;
+        let token = null;
+        if (cookies) {
+            cookies.split(';').forEach(cookie => {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'token') {
+                    token = value;
+                }
+            });
+        }
+
+        const user = await getUserByToken(token);
+        if (!user) {
+            socket.close();
+            return;
+        }
+        socket.username = user.username;
+        socket.gameCode = null;
+
+        socket.on('message', async (data) => {
+            const msg = JSON.parse(data.toString());
+            switch (msg.type) {
+                case 'createGame':
+                    handleCreateGame(socket);
+                    break;
+                case 'joinGame':
+                    handleJoinGame(socket, msg.code);
+                    break;
+                case 'answer':
+                    handleAnswer(socket, msg);
+                    break;
             }
         });
-    }
 
-    const user = await getUserByToken(token);
-    if (!user) {
-        socket.close();
-        return;
-    }
-    socket.username = user.username;
-    socket.gameCode = null;
+        socket.on('close', () => {
+            const code = socket.gameCode;
+            if (!code || !activeGames[code]) return;
+            const game = activeGames[code];
+            game.players = game.players.filter(p => p !== socket);
+            if (game.players.length === 0) {
+                delete activeGames[code];
+            } else {
+                broadcast(code, {
+                    type: 'playerLeft',
+                });
+            }
+        });
 
-    socket.on('message', async (data) => {
-        const msg = JSON.parse(data);
-        switch (msg.type) {
-            case 'connectGame':
-                await handleConnectGame(socket, msg.code);
-                break;
-            case 'answer':
-                handleAnswer(socket, msg);
-                break;
-        }
+        socket.on('pong', () => {
+            socket.isAlive = true;
+        });
     });
 
-    async function handleConnectGame(socket, code) {
-        const DBgame = await getCode(Number(code));
-        if (!DBgame) {
+    function generateCode() {
+        let code;
+        do {
+            code = Math.floor(100000 + Math.random() * 900000).toString();
+        } while (activeGames[code]);
+        return code;
+    }
+
+    function handleCreateGame(socket) {
+        const code = generateCode();
+        activeGames[code] = {
+            players: [{ socket, username }],
+            state: 'waiting',
+            currentTurn: null,
+            answers: [],
+            timer: null,
+        };
+        socket.gameCode = code;
+        socket.send(JSON.stringify({ type: 'gameCreated', code }));
+    }
+
+    function handleJoinGame(socket, code) {
+        const game = activeGames[code];
+        if (!game) {
             socket.send(JSON.stringify({ type: 'error', message: 'Game not found' }));
             return;
         }
-        if (!activeGames[code]) {
-            activeGames[code] = {
-                players: [],
-                state: 'waiting',
-                currentTurn: null,
-                answers: [],
-                timer: null,
-            };
-        }
-        const game = activeGames[code];
-        if (game.players.length >=2) {
+        if (game.players.length >= 2) {
             socket.send(JSON.stringify({ type: 'error', message: 'Game is full' }));
             return;
         }
-
+        if (game.players.find(p => p === socket)) {
+            return;
+        }
         socket.gameCode = code;
         game.players.push(socket);
-
         broadcast(code, {
             type: 'playerUpdate',
             players: game.players.map(p => p.username),
         });
-
         if (game.players.length === 2) {
             startGame(code);
         }
@@ -162,16 +195,15 @@ function peerProxy(httpServer, services) {
     socket.on('pong', () => {
         socket.isAlive = true;
     });
-  });
 
-  setInterval(() => {
+    setInterval(() => {
     socketServer.clients.forEach(function each(client) {
         if (client.isAlive === false) return client.terminate();
 
         client.isAlive = false;
         client.ping();
     });
-  }, 10000);
+    }, 10000);
 }
 
 module.exports = { peerProxy };
