@@ -73,7 +73,7 @@ function peerProxy(httpServer, services) {
     function handleCreateGame(socket) {
         const code = generateCode();
         activeGames[code] = {
-            players: [{ socket, username }],
+            players: [{ socket, username: user.username, role: 'waiting' }],
             state: 'waiting',
             currentTurn: null,
             answers: [],
@@ -103,6 +103,14 @@ function peerProxy(httpServer, services) {
             players: game.players.map(p => p.username),
         });
         if (game.players.length === 2) {
+            const firstIndex = Math.floor(Math.random() * 2);
+            game.players[firstIndex].role = 'active';
+            game.players[1 - firstIndex].role = 'waiting';
+            broadcast(code, {
+                type: 'gameStart',
+                firstPlayer: game.players[firstIndex].username,
+                waitingPlayer: game.players[1 - firstIndex].username,
+            });
             startGame(code);
         }
     }
@@ -131,37 +139,45 @@ function peerProxy(httpServer, services) {
 
     function startTurn(code) {
         const game = activeGames[code];
-        const current = game.players[game.currentTurn];
-        const other = game.players[1 - game.currentTurn];
+        if (!game) return;
+        const current = game.players.find(p => p.role === 'active');
+        if (!current) return;
+        const other = game.players.find(p => p.role === 'waiting');
         current.send(JSON.stringify({ type: 'yourTurn', time: 30 }));
         other.send(JSON.stringify({ type: 'wait' }));
-        game.timer = setTimeout(() => {
+        game.currentTurn = {
+            current,
+            other,
+            timer: setTimeout(() => {
+                startSecondPlayerTurn(code);
+        }, 30000)};
+    }
+
+    function startSecondPlayerTurn(code) {
+        const game = activeGames[code];
+        if (!game || !game.currentTurn) return;
+        const second = game.currentTurn.other;
+        second.socket.send(JSON.stringify({ type: 'yourTurn', time: 35 }));
+        game.currentTurn.timer = setTimeout(() => {
             endTurn(code);
-        }, 30000);
+        }, 35000);
     }
 
     function handleAnswer(socket, msg) {
         const code = socket.gameCode;
         const game = activeGames[code];
-        if (!game) return;
+        if (!game || !game.currentTurn) return;
+        const player = game.players.find(p => p === socket);
+        if (!player || player.role !== 'active') {
+            socket.send(JSON.stringify({ type: 'error', message: 'Not your turn' }));
+            return;
+        }
         game.answers.push({
             player: socket.username,
             answer: msg.answer
         });
-        clearTimeout(game.timer);
-        const isFirst = game.players[game.currentTurn] === socket;
-        if (isFirst) {
-            const second = game.players[1 - game.currentTurn];
-            second.send(JSON.stringify({
-                type: 'retry',
-                time: 35
-            }));
-            game.timer = setTimeout(() => {
-                endTurn(code);
-            }, 35000);
-        } else {
-            endTurn(code);
-        }
+        clearTimeout(game.currentTurn.timer);
+        endTurn(code);
     }
 
     function endTurn(code) {
@@ -172,10 +188,12 @@ function peerProxy(httpServer, services) {
             answers:game.answers
         });
         game.answers = []
-        game.currentTurn = 1 - game.currentTurn;
+        game.players.forEach(p => {
+            p.role = p.role === 'active' ? 'waiting' : 'active';
+        });
         setTimeout(() => {
             startTurn(code);
-        }, 30000);
+        }, 3000);
     }
 
     socket.on('close', () => {

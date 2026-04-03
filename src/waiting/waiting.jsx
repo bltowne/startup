@@ -1,11 +1,30 @@
 import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export function Waiting() {
   const [trivia, setTrivia] = React.useState("Loading...");
   const [time, setTimer] = React.useState(5);
   const navigate = useNavigate();
+  const location = useLocation();
+  const socket = location.state.socket;
+
+  React.useEffect(() => {
+    if (!socket) return;
+    const handleMessage = (event) => {
+      const msg = JSON.parse(event.data);
+      switch (msg.type) {
+        case 'gameStart':
+          navigate('/game');
+          break;
+      }
+    };
+    socket.addEventListener('message', handleMessage);
+    return () => {
+      socket.removeEventListener('message', handleMessage);
+    };
+  }, [socket, navigate]);
 
   React.useEffect(() => {
     fetch('https://opentdb.com/api.php?amount=20&type=multiple')
@@ -19,12 +38,12 @@ export function Waiting() {
         setTrivia("Error loading questions"));
   }, []);
 
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate('/game');
-    }, time * 1000);
-    return () => clearTimeout(timer);
-  }, [navigate]);
+  // React.useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     navigate('/game');
+  //   }, time * 1000);
+  //   return () => clearTimeout(timer);
+  // }, [navigate]);
 
   return (
     <main>

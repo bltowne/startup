@@ -79,12 +79,12 @@ export function Home() {
             case 'gameCreated':
                 setCode(msg.code);
                 localStorage.setItem('gameCode', msg.code);
-                navigate('/waiting');
+                navigate('/waiting', { state: { socket } });
                 break;
             case 'gameJoined':
                 setCode(msg.code);
                 localStorage.setItem('gameCode', msg.code);
-                navigate('/waiting');
+                navigate('/waiting', { state: { socket } });
                 break;
             case 'error':
                 alert(msg.message);
