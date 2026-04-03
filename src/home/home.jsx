@@ -8,6 +8,7 @@ export function Home() {
     const [password, setPassword] = React.useState('');
     const [code, setCode] = React.useState(0);
     const navigate = useNavigate();
+    const [socket, setSocket] = React.useState(null);
 
     async function loginOrCreate(endpoint, nextStep) {
         const response = await fetch(endpoint, {
@@ -21,6 +22,16 @@ export function Home() {
             console.log('login' + user);
             setText(user);
             localStorage.setItem('username', user);
+            if (!socket) {
+                const ws = new WebSocket(`ws://${window.location.hostname}:${window.location.port}/ws`);
+                ws.addEventListener('open', () => {
+                    console.log('WebSocket connection established');
+                });
+                ws.addEventListener('message', (event) => {
+                    handleMessage(JSON.parse(event.data));
+                });
+                setSocket(ws);
+            }
             await nextStep();
         } else {
             const text = await response.text();
@@ -30,32 +41,54 @@ export function Home() {
     }
 
     async function NewGame() {
-        const response = await fetch('/api/code', {
-            method: 'post',
-            body: JSON.stringify({ username: user }),
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-        });
-        const { code } = await response.json();
-        setCode(code);
-        localStorage.setItem('gameCode', code);
-        navigate('/waiting');
+        // const response = await fetch('/api/code', {
+        //     method: 'post',
+        //     body: JSON.stringify({ username: user }),
+        //     headers: {
+        //         'Content-Type': 'application/json; charset=UTF-8',
+        //     },
+        // });
+        // const { code } = await response.json();
+        // setCode(code);
+        // localStorage.setItem('gameCode', code);
+        // navigate('/waiting');
+        if (!socket) return;
+        socket.send(JSON.stringify({ type: 'createGame' }));
     }
 
     async function JoinGame() {
-        const response = await fetch('/api/code/join', {
-            method: 'post',
-            body: JSON.stringify({ username: user, code: code }),
-            headers: {
-                'Content-Type': 'application/json; charset=UTF-8',
-            },
-        });
-        if (response.ok) {
-            localStorage.setItem('gameCode', code);
-            navigate('/waiting');
-        } else {
-            alert("Error: Game does not exist.");
+        // const response = await fetch('/api/code/join', {
+        //     method: 'post',
+        //     body: JSON.stringify({ username: user, code: code }),
+        //     headers: {
+        //         'Content-Type': 'application/json; charset=UTF-8',
+        //     },
+        // });
+        // if (response.ok) {
+        //     localStorage.setItem('gameCode', code);
+        //     navigate('/waiting');
+        // } else {
+        //     alert("Error: Game does not exist.");
+        // }
+        if (!socket) return;
+        socket.send(JSON.stringify({ type: 'joinGame', code: code }));
+    }
+
+    function handleMessage(msg) {
+        switch (msg.type) {
+            case 'gameCreated':
+                setCode(msg.code);
+                localStorage.setItem('gameCode', msg.code);
+                navigate('/waiting');
+                break;
+            case 'gameJoined':
+                setCode(msg.code);
+                localStorage.setItem('gameCode', msg.code);
+                navigate('/waiting');
+                break;
+            case 'error':
+                alert(msg.message);
+                break;
         }
     }
 
