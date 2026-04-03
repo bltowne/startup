@@ -41,7 +41,7 @@ function peerProxy(httpServer, services) {
     });
 
     async function handleConnectGame(socket, code) {
-        const DBgame = await getCode(code);
+        const DBgame = await getCode(Number(code));
         if (!DBgame) {
             socket.send(JSON.stringify({ type: 'error', message: 'Game not found' }));
             return;
@@ -51,7 +51,7 @@ function peerProxy(httpServer, services) {
                 players: [],
                 state: 'waiting',
                 currentTurn: null,
-                answer: [],
+                answers: [],
                 timer: null,
             };
         }
@@ -95,6 +95,69 @@ function peerProxy(httpServer, services) {
         });
         startTurn(code);
     }
+
+    function startTurn(code) {
+        const game = activeGames[code];
+        const current = game.players[game.currentTurn];
+        const other = game.players[1 - game.currentTurn];
+        current.send(JSON.stringify({ type: 'yourTurn', time: 30 }));
+        other.send(JSON.stringify({ type: 'wait' }));
+        game.timer = setTimeout(() => {
+            endTurn(code);
+        }, 30000);
+    }
+
+    function handleAnswer(socket, msg) {
+        const code = socket.gameCode;
+        const game = activeGames[code];
+        if (!game) return;
+        game.answers.push({
+            player: socket.username,
+            answer: msg.answer
+        });
+        clearTimeout(game.timer);
+        const isFirst = game.players[game.currentTurn] === socket;
+        if (isFirst) {
+            const second = game.players[1 - game.currentTurn];
+            second.send(JSON.stringify({
+                type: 'retry',
+                time: 35
+            }));
+            game.timer = setTimeout(() => {
+                endTurn(code);
+            }, 35000);
+        } else {
+            endTurn(code);
+        }
+    }
+
+    function endTurn(code) {
+        const game = activeGames[code];
+        if (!game) return;
+        broadcast(code, {
+            type: 'roundEnd',
+            answers:game.answers
+        });
+        game.answers = []
+        game.currentTurn = 1 - game.currentTurn;
+        setTimeout(() => {
+            startTurn(code);
+        }, 30000);
+    }
+
+    socket.on('close', () => {
+        const code = socket.gameCode;
+        if (!code || !activeGames[code]) return;
+        const game = activeGames[code];
+        game.players = game.players.filter(p => p !== socket);
+        if (game.players.length === 0) {
+            delete activeGames[code];
+        } else {
+            broadcast(code, {
+                type: 'playerLeft',
+            });
+        }
+    })
 
     socket.on('pong', () => {
         socket.isAlive = true;
