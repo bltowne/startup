@@ -3,7 +3,7 @@ import "../app.css";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-export function Waiting() {
+export function Waiting({ user }) {
   const [trivia, setTrivia] = React.useState("Loading...");
   const [time, setTimer] = React.useState(5);
   const navigate = useNavigate();
@@ -16,7 +16,12 @@ export function Waiting() {
       const msg = JSON.parse(event.data);
       switch (msg.type) {
         case 'gameStart':
-          navigate('/game');
+          if (user === msg.firstPlayer) {
+            navigate('/game', { state: { socket } });
+          }
+          break;
+        case 'yourTurn':
+          navigate('/game', { state: { socket } });
           break;
       }
     };

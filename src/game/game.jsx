@@ -1,14 +1,19 @@
 import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-export function Game({ index, setIndex, answer, setAnswer }) {
+export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   const navigate = useNavigate();
-  const [time] = React.useState(30);
-  const [remainingTime, setRemainingTime] = React.useState(30);
+  // const [time] = React.useState(30);
+  const [remainingTime, setRemainingTime] = React.useState(0);
   const [text, setText] = React.useState('');
   const [data, setData] = React.useState([]);
   const [question, setQuestion] = React.useState("Loading question...");
+  const [answers, setAnswers] = React.useState([]);
+  const [myTurn, setMyTurn] = React.useState(false);
+  const location = useLocation();
+  const socket = location.state.socket;
 
   React.useEffect(() => {
     fetch('/api/data')
@@ -27,22 +32,45 @@ export function Game({ index, setIndex, answer, setAnswer }) {
   }, []);
 
   React.useEffect(() => {
+    if (!socket) return;
+    const handleMessage = (event) => {
+      const msg = JSON.parse(event.data);
+      switch (msg.type) {
+        case 'yourTurn':
+          setMyTurn(true);
+          setRemainingTime(msg.time);
+          break;
+        case 'roundEnd':
+          setAnswers(msg.answers);
+          setMyTurn(false);
+          navigate('/scoreboard');
+          break;
+      }
+    };
+    socket.addEventListener('message', handleMessage);
+    return () => {
+      socket.removeEventListener('message', handleMessage);
+    };
+  }, [socket, navigate]);
+
+  React.useEffect(() => {
     if (remainingTime === 0) {
-      navigate('/scoreboard');
+      socket.send(JSON.stringify({ type: 'endTurn' }));
     }
     const timer = setTimeout(() => {
       setRemainingTime(remainingTime - 1);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [remainingTime, navigate]);
+  }, [remainingTime]);
 
   function checkAnswer() {
     if (!data[index]) return;
     for (let i = 0; i < data[index].answers.length; i++) {
       if (text.toLowerCase() === data[index].answers[i].toLowerCase()) {
-        setAnswer(data[index].answers[i]);
-        navigate('/scoreboard');
-        return;
+        socket.send(JSON.stringify({ type: 'answer', answer: text }));
+        // setAnswer(data[index].answers[i]);
+        // navigate('/scoreboard');
+        // return;
       }
     }
     alert("Try again");
