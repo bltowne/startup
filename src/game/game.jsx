@@ -43,7 +43,7 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
         case 'roundEnd':
           setAnswers(msg.answers);
           setMyTurn(false);
-          navigate('/scoreboard');
+          navigate('/scoreboard', { state: {socket, answers: msg.answers} });
           break;
       }
     };

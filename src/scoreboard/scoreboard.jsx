@@ -1,10 +1,19 @@
 import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export function Scoreboard({ user, index, answer }) {
     const navigate = useNavigate();
+    const location = useLocation();
+    const socket = location.state.socket;
+    const answers = location.state.answers;
     const [data, setData] = React.useState([]);
+    const myAnswerObject = answers.find(a => a.player === user);
+    const myAnswer = myAnswerObject ? myAnswerObject.answer : "";
+    const oppAnswerObject = answers.find(a => a.player !== user);
+    const oppName = oppAnswerObject ? oppAnswerObject.player : "Opponent";
+    const oppAnswer = oppAnswerObject ? oppAnswerObject.answer : "";
 
     const [currentScore, setCurrentScore] = React.useState(() => {
         const score = JSON.parse(localStorage.getItem('currentScore'));
@@ -24,7 +33,7 @@ export function Scoreboard({ user, index, answer }) {
         backgroundColor: "lightcoral"
     };
 
-    const [opponentHighlightIndex, setOpponentHighlightIndex] = React.useState(null);
+    // const [opponentHighlightIndex, setOpponentHighlightIndex] = React.useState(null);
 
     React.useEffect(() => {
         fetch('/api/data')
@@ -35,39 +44,53 @@ export function Scoreboard({ user, index, answer }) {
     }, []);
 
     React.useEffect(() => {
-        if (!data[index] || !answer) return;
-        for (let i = 0; i < data[index].answers.length; i++) {
-            if (answer.toLowerCase() === data[index].answers[i].toLowerCase()) {
-                const points = parseInt(data[index].points[i]);
-                setCurrentScore(prevScore => {
-                    const newScore = prevScore + points;
-                    localStorage.setItem('currentScore', JSON.stringify(newScore));
-                    return newScore;
-                });
-                return;
+        if (!data[index]) return;
+        if (myAnswer) {
+            for (let i = 0; i < data[index].answers.length; i++) {
+                if (myAnswer.toLowerCase() === data[index].answers[i].toLowerCase()) {
+                    const points = parseInt(data[index].points[i]);
+                    setCurrentScore(prevScore => {
+                        const newScore = prevScore + points;
+                        localStorage.setItem('currentScore', JSON.stringify(newScore));
+                        return newScore;
+                    });
+                    return;
+                }
             }
         }
-    }, [data, index, answer]);
-
-    React.useEffect(() => {
-        if (!data[index]) return;
-
-        const timer = setTimeout(() => {
-            let newIndex = 5;
-            if (newIndex === index) {
-                newIndex = (newIndex + 1);
+        if (oppAnswer) {
+            for (let i = 0; i < data[index].answers.length; i++) {
+                if (oppAnswer.toLowerCase() === data[index].answers[i].toLowerCase()) {
+                    const points = parseInt(data[index].points[i]);
+                    setOpponentScore(prevScore => {
+                        const newScore = prevScore + points;
+                        localStorage.setItem('opponentScore', JSON.stringify(newScore));
+                        return newScore;
+                    });
+                }
             }
-            setOpponentHighlightIndex(newIndex);
-            const points = parseInt(data[index].points[5]) || 0;
-            setOpponentScore(prevScore => {
-                const newScore = prevScore + points;
-                localStorage.setItem('opponentScore', JSON.stringify(newScore));
-                return newScore;
-            });
-        }, 30000);
+        }
+    }, [data, index, myAnswer, oppAnswer]);
 
-        return () => clearTimeout(timer);
-    }, [data, index]);
+    // React.useEffect(() => {
+    //     if (!data[index]) return;
+
+    //     const timer = setTimeout(() => {
+    //         let newIndex = 5;
+    //         if (newIndex === index) {
+    //             newIndex = (newIndex + 1);
+    //         }
+    //         setOpponentHighlightIndex(newIndex);
+    //         const points = parseInt(data[index].points[5]) || 0;
+    //         setOpponentScore(prevScore => {
+    //             const newScore = prevScore + points;
+    //             localStorage.setItem('opponentScore', JSON.stringify(newScore));
+    //             return newScore;
+    //         });
+    //     }, 30000);
+
+    //     return () => clearTimeout(timer);
+    // }, [data, index]);
 
     async function logout() {
         await fetch('/api/auth/logout', {
@@ -89,14 +112,14 @@ export function Scoreboard({ user, index, answer }) {
     }
 
     function highlightAnswer(i) {
-        if (answer === getAnswer(i)) {
+        if (myAnswer === getAnswer(i)) {
             return highlight;
         }
         return {};
     }
 
     function highlightOpponentAnswer(i) {
-        if (i === opponentHighlightIndex) {
+        if (oppAnswer === getAnswer(i)) {
             return opponentHighlight;
         }
         return {};
@@ -110,7 +133,7 @@ export function Scoreboard({ user, index, answer }) {
                     <h2>{user}</h2><h4>{currentScore}</h4>
                 </div>
                 <div className="gray-scoreboard" style={{ border: "4px solid red" }}>
-                    <h2>Team B</h2><h4>{opponentScore}</h4>
+                    <h2>{oppName}</h2><h4>{opponentScore}</h4>
                 </div>
             </div>
             <br />
