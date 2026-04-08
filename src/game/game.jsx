@@ -1,7 +1,8 @@
 import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
+// import { useWS } from '../ws/WebSocketContext';
 
 export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   const navigate = useNavigate();
@@ -10,10 +11,11 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   const [text, setText] = React.useState('');
   const [data, setData] = React.useState([]);
   const [question, setQuestion] = React.useState("Loading question...");
-  const [answers, setAnswers] = React.useState([]);
-  const [myTurn, setMyTurn] = React.useState(false);
-  const location = useLocation();
-  const socket = location.state.socket;
+  // const [answers, setAnswers] = React.useState([]);
+  // const [myTurn, setMyTurn] = React.useState(false);
+  // const location = useLocation();
+  // const socket = location.state.socket;
+  // const { lastMessage } = useWS();
 
   React.useEffect(() => {
     fetch('/api/data')
@@ -31,28 +33,35 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
       });
   }, []);
 
-  React.useEffect(() => {
-    if (!socket) return;
-    const handleMessage = (event) => {
-      const msg = JSON.parse(event.data);
-      console.log("WS message: ", msg);
-      switch (msg.type) {
-        case 'yourTurn':
-          setMyTurn(true);
-          setRemainingTime(msg.time);
-          break;
-        case 'roundEnd':
-          setAnswers(msg.answers);
-          setMyTurn(false);
-          navigate('/scoreboard', { state: {socket, answers: msg.answers} });
-          break;
-      }
-    };
-    socket.addEventListener('message', handleMessage);
-    return () => {
-      socket.removeEventListener('message', handleMessage);
-    };
-  }, [socket, navigate]);
+  // React.useEffect(() => {
+  //   if (!lastMessage) return;
+  //   if (lastMessage.type === 'roundEnd') {
+  //     setAnswers(lastMessage.answers);
+  //   }
+  // }, [lastMessage]);
+
+  // React.useEffect(() => {
+  //   if (!socket) return;
+  //   const handleMessage = (event) => {
+  //     const msg = JSON.parse(event.data);
+  //     console.log("WS message: ", msg);
+  //     switch (msg.type) {
+  //       case 'yourTurn':
+  //         setMyTurn(true);
+  //         setRemainingTime(msg.time);
+  //         break;
+  //       case 'roundEnd':
+  //         setAnswers(msg.answers);
+  //         setMyTurn(false);
+  //         navigate('/scoreboard', { state: {socket, answers: msg.answers} });
+  //         break;
+  //     }
+  //   };
+  //   socket.addEventListener('message', handleMessage);
+  //   return () => {
+  //     socket.removeEventListener('message', handleMessage);
+  //   };
+  // }, [socket, navigate]);
 
   React.useEffect(() => {
     if (remainingTime === 0) {
