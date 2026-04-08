@@ -2,11 +2,11 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 // import { useLocation } from "react-router-dom";
-// import { useWS } from '../ws/WebSocketContext';
+import { useWS } from '../ws/WebSocketContext';
 
 export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   const navigate = useNavigate();
-  // const [time] = React.useState(30);
+  const [time, setTime] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(0);
   const [text, setText] = React.useState('');
   const [data, setData] = React.useState([]);
@@ -15,30 +15,33 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   // const [myTurn, setMyTurn] = React.useState(false);
   // const location = useLocation();
   // const socket = location.state.socket;
-  // const { lastMessage } = useWS();
-
-  React.useEffect(() => {
-    fetch('/api/data')
-      .then((response) => response.json())
-      .then((fetchedData) => {
-        if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-          const randomIndex = Math.floor(Math.random() * fetchedData.length);
-          setData(fetchedData);
-          setIndex(randomIndex);
-          setQuestion(fetchedData[randomIndex].question);
-        } else {
-          alert("No questions available. Please submit questions to the Question Submissions page before playing.");
-          navigate('/');
-        }
-      });
-  }, []);
+  const { lastMessage, send } = useWS();
 
   // React.useEffect(() => {
-  //   if (!lastMessage) return;
-  //   if (lastMessage.type === 'roundEnd') {
-  //     setAnswers(lastMessage.answers);
-  //   }
-  // }, [lastMessage]);
+  //   fetch('/api/data')
+  //     .then((response) => response.json())
+  //     .then((fetchedData) => {
+  //       if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+  //         const randomIndex = Math.floor(Math.random() * fetchedData.length);
+  //         setData(fetchedData);
+  //         setIndex(randomIndex);
+  //         setQuestion(fetchedData[randomIndex].question);
+  //       } else {
+  //         alert("No questions available. Please submit questions to the Question Submissions page before playing.");
+  //         navigate('/');
+  //       }
+  //     });
+  // }, []);
+
+  React.useEffect(() => {
+    if (!lastMessage) return;
+    if (lastMessage.type === 'yourTurn') {
+      setRemainingTime(lastMessage.time);
+      setTime(lastMessage.time);
+      setData([lastMessage.data]);
+      setQuestion(lastMessage.data.question);
+    }
+  }, [lastMessage]);
 
   // React.useEffect(() => {
   //   if (!socket) return;
@@ -64,9 +67,7 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   // }, [socket, navigate]);
 
   React.useEffect(() => {
-    if (remainingTime === 0) {
-      socket.send(JSON.stringify({ type: 'endTurn' }));
-    }
+    if (remainingTime === 0) return;
     const timer = setTimeout(() => {
       setRemainingTime(remainingTime - 1);
     }, 1000);
@@ -77,10 +78,10 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
     if (!data[index]) return;
     for (let i = 0; i < data[index].answers.length; i++) {
       if (text.toLowerCase() === data[index].answers[i].toLowerCase()) {
-        socket.send(JSON.stringify({ type: 'answer', answer: text }));
+        send({ type: 'answer', answer: text });
         // setAnswer(data[index].answers[i]);
         // navigate('/scoreboard');
-        // return;
+        return;
       }
     }
     alert("Try again");

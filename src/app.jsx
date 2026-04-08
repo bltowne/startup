@@ -71,6 +71,7 @@ function AppContent() {
         switch (lastMessage.type) {
             case 'gameCreated':
             case 'gameJoined':
+                setGameCode(lastMessage.code);
                 console.log('App navigating to waiting');
                 navigate('/waiting');
                 break;
@@ -78,13 +79,19 @@ function AppContent() {
                 console.log('App navigating to game');
                 navigate('/game');
                 break;
+            case 'answer':
+            case 'roundEnd':
+                console.log('App navigating to scoreboard');
+                navigate('/scoreboard');
+                break;
         }
     }, [lastMessage, navigate]);
+
     return (
         <div className="body">
             <Routes>
                 <Route element={<MainLayout />} >
-                    <Route path="/" element={<Home setUser={setUser} setGameCode={setGameCode} />} />
+                    <Route path="/" element={<Home setUser={setUser} />} />
                     <Route path="/library" element={<Library />} />
                 </Route>
                 <Route element={<AltLayout user={user} gameCode={gameCode} />} >

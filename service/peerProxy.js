@@ -2,7 +2,7 @@ const { WebSocketServer, WebSocket } = require('ws');
 
 function peerProxy(httpServer, services) {
     const socketServer = new WebSocketServer({ server: httpServer });
-    const { getUserByToken, getCode } = services;
+    const { getUserByToken, getData } = services;
 
     const activeGames = {};
 
@@ -117,8 +117,9 @@ function peerProxy(httpServer, services) {
             game.players[firstIndex].role = 'active';
             game.players[1 - firstIndex].role = 'waiting';
             console.log("Sending yourTurn to: ", game.players[firstIndex].username);
-            game.players[firstIndex].socket.send(JSON.stringify({ type: 'yourTurn', code, }));
-            game.players[1 - firstIndex].socket.send(JSON.stringify({ type: 'wait', code, waitingFor: game.players[firstIndex].username }));
+            setTimeout(() => startTurn(code), 1000);
+            // game.players[firstIndex].socket.send(JSON.stringify({ type: 'yourTurn', code, }));
+            // game.players[1 - firstIndex].socket.send(JSON.stringify({ type: 'wait', code, waitingFor: game.players[firstIndex].username }));
             // broadcast(code, {
             //     type: 'gameStart',
             //     code,
@@ -140,19 +141,19 @@ function peerProxy(httpServer, services) {
         });
     }
 
-    function startGame(code) {
-        console.log("Starting game: ", code);
-        const game = activeGames[code];
-        if (!game || game.players.length < 2) return;
-        const firstIndex = Math.floor(Math.random() * 2);
-        const firstPlayer = game.players[firstIndex];
-        const secondPlayer = game.players[1 - firstIndex];
-        console.log("First player: ", firstPlayer.username, "Second player: ", secondPlayer.username);
-        firstPlayer.role = 'active';
-        secondPlayer.role = 'waiting';
-        firstPlayer.socket.send(JSON.stringify({ type: 'gameStart', code, firstPlayer: firstPlayer.username }));
-        secondPlayer.socket.send(JSON.stringify({ type: 'wait', code, waitingFor: firstPlayer.username }));
-        startTurn(code);
+    // function startGame(code) {
+    //     console.log("Starting game: ", code);
+    //     const game = activeGames[code];
+    //     if (!game || game.players.length < 2) return;
+    //     const firstIndex = Math.floor(Math.random() * 2);
+    //     const firstPlayer = game.players[firstIndex];
+    //     const secondPlayer = game.players[1 - firstIndex];
+    //     console.log("First player: ", firstPlayer.username, "Second player: ", secondPlayer.username);
+    //     firstPlayer.role = 'active';
+    //     secondPlayer.role = 'waiting';
+    //     firstPlayer.socket.send(JSON.stringify({ type: 'gameStart', code, firstPlayer: firstPlayer.username }));
+    //     secondPlayer.socket.send(JSON.stringify({ type: 'wait', code, waitingFor: firstPlayer.username }));
+        // startTurn(code);
         // game.state = 'playing';
         // game.currentTurn = Math.floor(Math.random() * 2);
         // broadcast(code, {
@@ -161,30 +162,46 @@ function peerProxy(httpServer, services) {
         //     firstPlayer: game.players[game.currentTurn].username
         // });
         // startTurn(code);
-    }
+    // }
 
     function startTurn(code) {
         const game = activeGames[code];
         if (!game) return;
-        console.log("Starting turn", {code, players: game.players.map(p => ({ username: p.username, role: p.role }))});
+        // console.log("Starting turn", {code, players: game.players.map(p => ({ username: p.username, role: p.role }))});
         const current = game.players.find(p => p.role === 'active');
         if (!current) return;
         const other = game.players.find(p => p.role === 'waiting');
-        current.socket.send(JSON.stringify({ type: 'yourTurn', time: 30 }));
-        other.socket.send(JSON.stringify({ type: 'wait' }));
-        game.currentTurn = {
-            current,
-            other,
-            timer: setTimeout(() => {
-                startSecondPlayerTurn(code);
-        }, 30000)};
+        getData().then(data => {
+            if (!data || data.length === 0) {
+                console.log("No questions available");
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * data.length);
+            const currentData = data[randomIndex];
+            game.currentTurn = {
+                current,
+                other,
+                currentData,
+                timer: setTimeout(() => {
+                    startSecondPlayerTurn(code);
+                }, 30000)
+            };
+            current.socket.send(JSON.stringify({ type: 'yourTurn', time: 30, data: currentData }));
+            other.socket.send(JSON.stringify({ type: 'wait', data: currentData }));
+        });
+        // game.currentTurn = {
+        //     current,
+        //     other,
+        //     timer: setTimeout(() => {
+        //         startSecondPlayerTurn(code);
+        // }, 30000)};
     }
 
     function startSecondPlayerTurn(code) {
         const game = activeGames[code];
         if (!game || !game.currentTurn) return;
         const second = game.currentTurn.other;
-        second.socket.send(JSON.stringify({ type: 'yourTurn', time: 35 }));
+        second.socket.send(JSON.stringify({ type: 'yourTurn', time: 35, data: game.currentTurn.currentData }));
         game.currentTurn.timer = setTimeout(() => {
             endTurn(code);
         }, 35000);
@@ -225,13 +242,14 @@ function peerProxy(httpServer, services) {
     }
 
     setInterval(() => {
-    socketServer.clients.forEach(function each(client) {
-        if (client.isAlive === false) return client.terminate();
+        socketServer.clients.forEach(function each(client) {
+            if (client.isAlive === false) return client.terminate();
 
-        client.isAlive = false;
-        client.ping();
-    });
+            client.isAlive = false;
+            client.ping();
+        });
     }, 10000);
+
 }
 
 module.exports = { peerProxy };

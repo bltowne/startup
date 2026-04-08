@@ -132,4 +132,5 @@ const httpService = app.listen(port, () => {
 peerProxy(httpService, {
   getUserByToken: DB.getUserByToken,
   // getCode: DB.getCode
+  getData: DB.getData,
 });

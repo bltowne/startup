@@ -9,7 +9,8 @@ export function WebSocketProvider({ children }) {
 
     useEffect(() => {
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-        const wsUrl = window.location.origin.replace(/^http/, protocol) + '/ws';
+        const host = window.location.host;
+        const wsUrl = `${protocol}://${host}/ws`;
         const socket = new WebSocket(wsUrl);
         socketRef.current = socket;
 
