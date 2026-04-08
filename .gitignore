@@ -5,3 +5,4 @@ simon-db/
 simon-websocket/
 service/node_modules/
 service/dbConfig.json
+service/testDB.js

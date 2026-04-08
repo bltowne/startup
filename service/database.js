@@ -3,19 +3,39 @@ const config = require('./dbConfig.json');
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
-const db = client.db('startup');
-const userCollection = db.collection('user');
-const codeCollection = db.collection('code');
-const dataCollection = db.collection('data');
+// const db = client.db('startup');
+// const userCollection = db.collection('user');
+// const codeCollection = db.collection('code');
+// const dataCollection = db.collection('data');
+let db;
+let userCollection;
+let codeCollection;
+let dataCollection;
 
-(async function testConnection() {
+// (async function testConnection() {
+//   try {
+//     await db.command({ ping: 1 });
+//   } catch (ex) {
+//     console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+//     process.exit(1);
+//   }
+// })();
+
+async function connectDB() {
   try {
-    await db.command({ ping: 1 });
-  } catch (ex) {
-    console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+    await client.connect();
+    db = client.db('startup');
+    userCollection = db.collection('user');
+    codeCollection = db.collection('code');
+    dataCollection = db.collection('data');
+    console.log('MongoDB connection successful');
+  } catch (e) {
+    console.error('MongoDB connection failed:', e.message);
     process.exit(1);
   }
-})();
+}
+
+connectDB();
 
 function getUser(username) {
   return userCollection.findOne({ username: username });

@@ -30,14 +30,18 @@ function peerProxy(httpServer, services) {
 
         socket.on('message', async (data) => {
             const msg = JSON.parse(data.toString());
+            console.log("Received: ", msg, " from ", socket.username);
             switch (msg.type) {
                 case 'createGame':
+                    console.log("Creating game");
                     handleCreateGame(socket);
                     break;
                 case 'joinGame':
+                    console.log("Joining game: ", msg.code);
                     handleJoinGame(socket, msg.code);
                     break;
                 case 'answer':
+                    console.log("Answer received: ", msg.answer);
                     handleAnswer(socket, msg);
                     break;
             }
@@ -118,6 +122,7 @@ function peerProxy(httpServer, services) {
     function broadcast(code, message) {
         const game = activeGames[code];
         if (!game) return;
+        console.log("Broadcasting to game ", code, ": ", message);
         const msg = JSON.stringify(message);
         game.players.forEach(player => {
             if (player.readyState === WebSocket.OPEN) {
@@ -140,6 +145,7 @@ function peerProxy(httpServer, services) {
     function startTurn(code) {
         const game = activeGames[code];
         if (!game) return;
+        console.log("Starting turn", {code, players: game.players.map(p => ({ username: p.username, role: p.role }))});
         const current = game.players.find(p => p.role === 'active');
         if (!current) return;
         const other = game.players.find(p => p.role === 'waiting');
@@ -183,6 +189,7 @@ function peerProxy(httpServer, services) {
     function endTurn(code) {
         const game = activeGames[code];
         if (!game) return;
+        console.log("Ending turn", {code});
         broadcast(code, {
             type: 'roundEnd',
             answers:game.answers
@@ -195,24 +202,6 @@ function peerProxy(httpServer, services) {
             startTurn(code);
         }, 3000);
     }
-
-    socket.on('close', () => {
-        const code = socket.gameCode;
-        if (!code || !activeGames[code]) return;
-        const game = activeGames[code];
-        game.players = game.players.filter(p => p !== socket);
-        if (game.players.length === 0) {
-            delete activeGames[code];
-        } else {
-            broadcast(code, {
-                type: 'playerLeft',
-            });
-        }
-    })
-
-    socket.on('pong', () => {
-        socket.isAlive = true;
-    });
 
     setInterval(() => {
     socketServer.clients.forEach(function each(client) {

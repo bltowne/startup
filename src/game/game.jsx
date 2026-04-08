@@ -35,6 +35,7 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
     if (!socket) return;
     const handleMessage = (event) => {
       const msg = JSON.parse(event.data);
+      console.log("WS message: ", msg);
       switch (msg.type) {
         case 'yourTurn':
           setMyTurn(true);

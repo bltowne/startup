@@ -23,7 +23,8 @@ export function Home() {
             setText(user);
             localStorage.setItem('username', user);
             if (!socket) {
-                const ws = new WebSocket(`ws://${window.location.hostname}:${window.location.port}/ws`);
+                const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+                const ws = new WebSocket(`${protocol}://${window.location.hostname}:${window.location.port}/ws`);
                 ws.addEventListener('open', () => {
                     console.log('WebSocket connection established');
                 });
@@ -75,6 +76,7 @@ export function Home() {
     }
 
     function handleMessage(msg) {
+        console.log("WS message: ", msg);
         switch (msg.type) {
             case 'gameCreated':
                 setCode(msg.code);
