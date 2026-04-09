@@ -2,28 +2,28 @@ import React from 'react';
 import "../app.css";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useWS } from '../ws/WebSocketContext';
 
-export function Scoreboard({ user, index, answer }) {
+export function Scoreboard({ user }) {
     const navigate = useNavigate();
-    const location = useLocation();
-    const socket = location.state.socket;
-    const answers = location.state.answers;
-    const [data, setData] = React.useState([]);
+    const data = JSON.parse(localStorage.getItem('data'));
+    const answers = JSON.parse(localStorage.getItem('lastRoundAnswers')) || [];
+    const scores = JSON.parse(localStorage.getItem('totalScores')) || [];
     const myAnswerObject = answers.find(a => a.player === user);
     const myAnswer = myAnswerObject ? myAnswerObject.answer : "";
     const oppAnswerObject = answers.find(a => a.player !== user);
     const oppName = oppAnswerObject ? oppAnswerObject.player : "Opponent";
     const oppAnswer = oppAnswerObject ? oppAnswerObject.answer : "";
 
-    const [currentScore, setCurrentScore] = React.useState(() => {
-        const score = JSON.parse(localStorage.getItem('currentScore'));
-        return score || 0;
-    });
+    // const [currentScore, setCurrentScore] = React.useState(() => {
+    //     const score = JSON.parse(localStorage.getItem('currentScore'));
+    //     return score || 0;
+    // });
 
-    const [opponentScore, setOpponentScore] = React.useState(() => {
-        const score = JSON.parse(localStorage.getItem('opponentScore'));
-        return score || 0;
-    });
+    // const [opponentScore, setOpponentScore] = React.useState(() => {
+    //     const score = JSON.parse(localStorage.getItem('opponentScore'));
+    //     return score || 0;
+    // });
 
     const highlight = {
         backgroundColor: "lightgreen",
@@ -35,42 +35,42 @@ export function Scoreboard({ user, index, answer }) {
 
     // const [opponentHighlightIndex, setOpponentHighlightIndex] = React.useState(null);
 
-    React.useEffect(() => {
-        fetch('/api/data')
-            .then((response) => response.json())
-            .then((fetchedData) => {
-                setData(fetchedData);
-            });
-    }, []);
+    // React.useEffect(() => {
+    //     fetch('/api/data')
+    //         .then((response) => response.json())
+    //         .then((fetchedData) => {
+    //             setData(fetchedData);
+    //         });
+    // }, []);
 
-    React.useEffect(() => {
-        if (!data[index]) return;
-        if (myAnswer) {
-            for (let i = 0; i < data[index].answers.length; i++) {
-                if (myAnswer.toLowerCase() === data[index].answers[i].toLowerCase()) {
-                    const points = parseInt(data[index].points[i]);
-                    setCurrentScore(prevScore => {
-                        const newScore = prevScore + points;
-                        localStorage.setItem('currentScore', JSON.stringify(newScore));
-                        return newScore;
-                    });
-                    return;
-                }
-            }
-        }
-        if (oppAnswer) {
-            for (let i = 0; i < data[index].answers.length; i++) {
-                if (oppAnswer.toLowerCase() === data[index].answers[i].toLowerCase()) {
-                    const points = parseInt(data[index].points[i]);
-                    setOpponentScore(prevScore => {
-                        const newScore = prevScore + points;
-                        localStorage.setItem('opponentScore', JSON.stringify(newScore));
-                        return newScore;
-                    });
-                }
-            }
-        }
-    }, [data, index, myAnswer, oppAnswer]);
+    // React.useEffect(() => {
+    //     if (!data) return;
+    //     if (myAnswer) {
+    //         for (let i = 0; i < data.answers.length; i++) {
+    //             if (myAnswer.toLowerCase() === data.answers[i].toLowerCase()) {
+    //                 const points = parseInt(data.points[i]);
+    //                 setCurrentScore(prevScore => {
+    //                     const newScore = prevScore + points;
+    //                     localStorage.setItem('currentScore', JSON.stringify(newScore));
+    //                     return newScore;
+    //                 });
+    //                 return;
+    //             }
+    //         }
+    //     }
+    //     if (oppAnswer) {
+    //         for (let i = 0; i < data.answers.length; i++) {
+    //             if (oppAnswer.toLowerCase() === data.answers[i].toLowerCase()) {
+    //                 const points = parseInt(data.points[i]);
+    //                 setOpponentScore(prevScore => {
+    //                     const newScore = prevScore + points;
+    //                     localStorage.setItem('opponentScore', JSON.stringify(newScore));
+    //                     return newScore;
+    //                 });
+    //             }
+    //         }
+    //     }
+    // }, [data, myAnswer, oppAnswer]);
 
     // React.useEffect(() => {
     //     if (!data[index]) return;
@@ -100,15 +100,15 @@ export function Scoreboard({ user, index, answer }) {
     }
 
     function getQuestion() {
-        return data[index]?.question || "Loading question...";
+        return data?.question || "Loading question...";
     }
 
     function getAnswer(i) {
-        return data[index]?.answers[i] || "";
+        return data?.answers[i] || "";
     }
 
     function getPoints(i) {
-        return data[index]?.points[i] || 0;
+        return data?.points[i] || 0;
     }
 
     function highlightAnswer(i) {
@@ -130,10 +130,10 @@ export function Scoreboard({ user, index, answer }) {
             <h1>SCOREBOARD</h1>
             <div className="score-container">
                 <div className="gray-scoreboard" style={{ border: "4px solid green" }}>
-                    <h2>{user}</h2><h4>{currentScore}</h4>
+                    <h2>{user}</h2><h4>{scores[user]}</h4>
                 </div>
                 <div className="gray-scoreboard" style={{ border: "4px solid red" }}>
-                    <h2>{oppName}</h2><h4>{opponentScore}</h4>
+                    <h2>{oppName}</h2><h4>{scores[oppName]}</h4>
                 </div>
             </div>
             <br />

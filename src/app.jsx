@@ -79,11 +79,11 @@ function AppContent() {
                 console.log('App navigating to game');
                 navigate('/game');
                 break;
-            case 'answer':
-            case 'roundEnd':
-                console.log('App navigating to scoreboard');
-                navigate('/scoreboard');
-                break;
+            // case 'answer':
+            // case 'roundEnd':
+            //     console.log('App navigating to scoreboard');
+            //     navigate('/scoreboard');
+            //     break;
         }
     }, [lastMessage, navigate]);
 
@@ -97,7 +97,7 @@ function AppContent() {
                 <Route element={<AltLayout user={user} gameCode={gameCode} />} >
                     <Route path="/waiting" element={<Waiting />} />
                     <Route path="/game" element={<Game index={index} setIndex={setIndex} answer={answer} setAnswer={setAnswer} user={user} gameCode={gameCode} />} />
-                    <Route path="/scoreboard" element={<Scoreboard user={user} index={index} answer={answer} />} />
+                    <Route path="/scoreboard" element={<Scoreboard user={user} index={index} />} />
                 </Route>
             </Routes>
         </div>

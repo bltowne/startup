@@ -27,12 +27,24 @@ export function WebSocketProvider({ children }) {
             console.log('WS closed');
             setConnected(false);
         };
-        return () => socket.close();
+        return () => {
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.close();
+            }
+        };
     }, []);
     const send = (msg) => {
-        if (socketRef.current?.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify(msg));
+        const socket = socketRef.current;
+        if (!socket) {
+            console.warn("Send failed: socket is null");
+            return;
         }
+        if (socket.readyState !== WebSocket.OPEN) {
+            console.warn("Send failed: socket not open", socket.readyState);
+            return;
+        }
+        console.log("Sending WS message: ", msg);
+        socketRef.current.send(JSON.stringify(msg));
     };
 
     return (

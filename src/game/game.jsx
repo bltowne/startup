@@ -9,13 +9,14 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   const [time, setTime] = React.useState(30);
   const [remainingTime, setRemainingTime] = React.useState(0);
   const [text, setText] = React.useState('');
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState(null);
   const [question, setQuestion] = React.useState("Loading question...");
   // const [answers, setAnswers] = React.useState([]);
   // const [myTurn, setMyTurn] = React.useState(false);
   // const location = useLocation();
   // const socket = location.state.socket;
   const { lastMessage, send } = useWS();
+  const canSubmit = Array.isArray(data?.answers) && remainingTime > 0;
 
   // React.useEffect(() => {
   //   fetch('/api/data')
@@ -35,36 +36,26 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
 
   React.useEffect(() => {
     if (!lastMessage) return;
-    if (lastMessage.type === 'yourTurn') {
-      setRemainingTime(lastMessage.time);
-      setTime(lastMessage.time);
-      setData([lastMessage.data]);
-      setQuestion(lastMessage.data.question);
+    switch(lastMessage.type) {
+      case 'yourTurn':
+        setRemainingTime(lastMessage.time);
+        setTime(lastMessage.time);
+        setData(lastMessage.data);
+        localStorage.setItem('data', JSON.stringify(lastMessage.data));
+        setQuestion(lastMessage.data.question);
+        console.log('Everything set');
+        break;
+      case 'roundEnd':
+        localStorage.setItem('lastRoundAnswers', JSON.stringify(lastMessage.answers));
+        localStorage.setItem('totalScores', JSON.stringify(lastMessage.scores));
+        console.log('App navigating to scoreboard');
+        navigate('/scoreboard');
+        break;
+      case 'duplicateAnswer':
+        alert("Try again");
+        break;
     }
-  }, [lastMessage]);
-
-  // React.useEffect(() => {
-  //   if (!socket) return;
-  //   const handleMessage = (event) => {
-  //     const msg = JSON.parse(event.data);
-  //     console.log("WS message: ", msg);
-  //     switch (msg.type) {
-  //       case 'yourTurn':
-  //         setMyTurn(true);
-  //         setRemainingTime(msg.time);
-  //         break;
-  //       case 'roundEnd':
-  //         setAnswers(msg.answers);
-  //         setMyTurn(false);
-  //         navigate('/scoreboard', { state: {socket, answers: msg.answers} });
-  //         break;
-  //     }
-  //   };
-  //   socket.addEventListener('message', handleMessage);
-  //   return () => {
-  //     socket.removeEventListener('message', handleMessage);
-  //   };
-  // }, [socket, navigate]);
+  }, [lastMessage, navigate]);
 
   React.useEffect(() => {
     if (remainingTime === 0) return;
@@ -75,17 +66,19 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
   }, [remainingTime]);
 
   function checkAnswer() {
-    if (!data[index]) return;
-    for (let i = 0; i < data[index].answers.length; i++) {
-      if (text.toLowerCase() === data[index].answers[i].toLowerCase()) {
-        send({ type: 'answer', answer: text });
-        // setAnswer(data[index].answers[i]);
-        // navigate('/scoreboard');
-        return;
-      }
+    if (!data || !Array.isArray(data.answers)) {
+      console.warn("Answers not ready yet");
+      return;
     }
-    alert("Try again");
-    return;
+    const isCorrect = data.answers.some(a => a.toLowerCase() === text.toLowerCase());
+    if (isCorrect) {
+      console.log("Answer submitted", text);
+      send({ type: 'answer', answer: text });
+      // return;
+    } else {
+      alert("Try again");
+      return;
+    }
   }
 
   function textChange(e) {
@@ -103,7 +96,8 @@ export function Game({ index, setIndex, answer, setAnswer, user, gameCode }) {
             <br />
               <input type="text" placeholder="Enter answer" onChange={textChange}/>
               <br />
-              <input type="submit" value="Submit" onClick={checkAnswer}/>
+              <input type="submit" value="Submit" onClick={checkAnswer} disabled={!canSubmit}/>
+              {/* <button onClick={checkAnswer} disabled={!canSubmit}>Submit</button> */}
         </div>
     </main>
   );

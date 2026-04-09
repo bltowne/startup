@@ -77,11 +77,13 @@ function peerProxy(httpServer, services) {
     function handleCreateGame(socket) {
         const code = generateCode();
         activeGames[code] = {
-            players: [{ socket, username: socket.username, role: 'waiting' }],
+            players: [{ socket, username: socket.username, role: 'waiting', score: 0 }],
             state: 'waiting',
             currentTurn: null,
             answers: [],
             timer: null,
+            turnIndex: 0,
+            turnToken: 0,
         };
         socket.gameCode = code;
         socket.send(JSON.stringify({ type: 'gameCreated', code }));
@@ -101,7 +103,7 @@ function peerProxy(httpServer, services) {
         //     return;
         // }
         socket.gameCode = code;
-        const player = { socket, username: socket.username, role: 'waiting' };
+        const player = { socket, username: socket.username, role: 'waiting', score: 0 };
         game.players.push(player);
         socket.send(JSON.stringify({ type: 'gameJoined', code }));
         broadcast(code, {
@@ -167,7 +169,8 @@ function peerProxy(httpServer, services) {
     function startTurn(code) {
         const game = activeGames[code];
         if (!game) return;
-        // console.log("Starting turn", {code, players: game.players.map(p => ({ username: p.username, role: p.role }))});
+        clearActiveTimer(game);
+        console.log("Starting first player turn");
         const current = game.players.find(p => p.role === 'active');
         if (!current) return;
         const other = game.players.find(p => p.role === 'waiting');
@@ -176,14 +179,19 @@ function peerProxy(httpServer, services) {
                 console.log("No questions available");
                 return;
             }
+            game.turnToken++;
+            const token = game.turnToken;
             const randomIndex = Math.floor(Math.random() * data.length);
             const currentData = data[randomIndex];
+            game.answers = [];
+            game.turnIndex = 0;
             game.currentTurn = {
                 current,
                 other,
                 currentData,
                 timer: setTimeout(() => {
-                    startSecondPlayerTurn(code);
+                    if (game.turnToken !== token) return;
+                    advanceTurn(code);
                 }, 30000)
             };
             current.socket.send(JSON.stringify({ type: 'yourTurn', time: 30, data: currentData }));
@@ -200,14 +208,32 @@ function peerProxy(httpServer, services) {
     function startSecondPlayerTurn(code) {
         const game = activeGames[code];
         if (!game || !game.currentTurn) return;
+        console.log("Starting second player turn");
+        game.turnToken++;
+        const token = game.turnToken;
+        clearActiveTimer(game);
+        const previous = game.currentTurn.current;
         const second = game.currentTurn.other;
+        previous.role = 'waiting';
+        second.role = 'active';
+        game.turnIndex = 1;
+        game.currentTurn = {
+            current: second,
+            other: previous,
+            currentData: game.currentTurn.currentData,
+            timer: setTimeout(() => {
+                if (game.turnToken !== token) return;
+                advanceTurn(code);
+            }, 35000)
+        };
         second.socket.send(JSON.stringify({ type: 'yourTurn', time: 35, data: game.currentTurn.currentData }));
-        game.currentTurn.timer = setTimeout(() => {
-            endTurn(code);
-        }, 35000);
+        // game.currentTurn.timer = setTimeout(() => {
+        //     endTurn(code);
+        // }, 35000);
     }
 
     function handleAnswer(socket, msg) {
+        console.log("Handling answer");
         const code = socket.gameCode;
         const game = activeGames[code];
         if (!game || !game.currentTurn) return;
@@ -216,29 +242,86 @@ function peerProxy(httpServer, services) {
             socket.send(JSON.stringify({ type: 'error', message: 'Not your turn' }));
             return;
         }
+        if (game.turnIndex >= 2) return;
+        game.turnToken++;
+        clearActiveTimer(game);
+        const submitted = msg.answer.trim().toLowerCase();
+        const alreadyUsed = game.answers.some(a => a.answer.trim().toLowerCase() === submitted);
+        if (alreadyUsed) {
+            socket.send(JSON.stringify({ type: 'duplicateAnswer', answer: msg.answer }));
+            return;
+        }
         game.answers.push({
             player: socket.username,
             answer: msg.answer
         });
-        clearTimeout(game.currentTurn.timer);
-        endTurn(code);
+        clearActiveTimer(game);
+        console.log("Answer handled");
+        if (game.turnIndex === 0) {
+            startSecondPlayerTurn(code);
+        } else if (game.turnIndex === 1) {
+            endTurn(code);
+        }
+    }
+
+    function advanceTurn(code) {
+        const game = activeGames[code];
+        if (!game || !game.currentTurn) return;
+        if (game.turnIndex === 0) {
+            startSecondPlayerTurn(code);
+        } else if (game.turnIndex === 1) {
+            endTurn(code);
+        }
+    }
+
+    function clearActiveTimer(game) {
+        if (game.currentTurn?.timer) {
+            clearTimeout(game.currentTurn.timer);
+            game.currentTurn.timer = null;
+        }
     }
 
     function endTurn(code) {
         const game = activeGames[code];
         if (!game) return;
+        game.turnToken++;
+        clearActiveTimer(game);
+        game.turnIndex = 2;
         console.log("Ending turn", {code});
+        const roundScores = calculateRoundScores(game.currentTurn.currentData, game.answers);
+        for (const player of game.players) {
+            const earned = roundScores[player.username] || 0;
+            player.score += earned;
+        }
+        const cumulativeScores = {};
+        game.players.forEach(p => {
+            cumulativeScores[p.username] = p.score;
+        });
         broadcast(code, {
             type: 'roundEnd',
-            answers:game.answers
+            answers: game.answers,
+            scores: cumulativeScores,
         });
         game.answers = []
         game.players.forEach(p => {
             p.role = p.role === 'active' ? 'waiting' : 'active';
         });
-        setTimeout(() => {
-            startTurn(code);
-        }, 3000);
+        // setTimeout(() => {
+        //     startTurn(code);
+        // }, 3000);
+    }
+
+    function calculateRoundScores(questionData, answers) {
+        const scores = {};
+        answers.forEach(({ player, answer }) => {
+            const index = questionData.answers.findIndex(
+                a => a.trim().toLowerCase() === answer.trim().toLowerCase()
+            );
+            scores[player] = index !== -1
+                ? parseInt(questionData.points[index])
+                : 0;
+        });
+        return scores;
     }
 
     setInterval(() => {
