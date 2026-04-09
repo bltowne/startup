@@ -1,6 +1,5 @@
 import React from 'react';
 import "../app.css";
-// import { useNavigate } from "react-router-dom";
 import { useWS } from '../ws/WebSocketContext';
 
 export function Home() {
@@ -8,7 +7,6 @@ export function Home() {
     const [user, setText] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [code, setCode] = React.useState(0);
-    // const navigate = useNavigate();
     const { send, connected } = useWS();
 
     async function loginOrCreate(endpoint, nextStep) {
@@ -23,84 +21,23 @@ export function Home() {
             console.log('login' + user);
             setText(user);
             localStorage.setItem('username', user);
-            // let ws = socket;
-            // if (!ws) {
-            //     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-            //     const wsUrl = window.location.origin.replace(/^http/, 'ws') + '/ws';
-            //     console.log("WS URL: ", wsUrl);
-            //     ws = new WebSocket(wsUrl);
-            //     ws.addEventListener('open', () => {
-            //         console.log('WebSocket connection established');
-            //     });
-            //     ws.addEventListener('message', (event) => {
-            //         handleMessage(JSON.parse(event.data));
-            //     });
-            //     setSocket(ws);
-            // }
             nextStep();
         } else {
-            // const text = await response.text();
-            // console.log("server response: " + text);
             alert('Error: Please try again');
         }
     }
 
     async function NewGame(ws) {
-        // const response = await fetch('/api/code', {
-        //     method: 'post',
-        //     body: JSON.stringify({ username: user }),
-        //     headers: {
-        //         'Content-Type': 'application/json; charset=UTF-8',
-        //     },
-        // });
-        // const { code } = await response.json();
-        // setCode(code);
-        // localStorage.setItem('gameCode', code);
-        // navigate('/waiting');
         if (!connected) return;
         console.log("Creating game");
-        // ws.send(JSON.stringify({ type: 'createGame' }));
         send({ type: 'createGame' });
     }
 
     async function JoinGame(ws) {
-        // const response = await fetch('/api/code/join', {
-        //     method: 'post',
-        //     body: JSON.stringify({ username: user, code: code }),
-        //     headers: {
-        //         'Content-Type': 'application/json; charset=UTF-8',
-        //     },
-        // });
-        // if (response.ok) {
-        //     localStorage.setItem('gameCode', code);
-        //     navigate('/waiting');
-        // } else {
-        //     alert("Error: Game does not exist.");
-        // }
         if (!connected) return;
         console.log("Joining game: ", code);
-        // ws.send(JSON.stringify({ type: 'joinGame', code: code }));
         send({ type: 'joinGame', code });
     }    
-
-    // function handleMessage(msg) {
-    //     console.log("WS message: ", msg);
-    //     switch (msg.type) {
-    //         case 'gameCreated':
-    //             setCode(msg.code);
-    //             localStorage.setItem('gameCode', msg.code);
-    //             navigate('/waiting', { state: { socket, user } });
-    //             break;
-    //         case 'gameJoined':
-    //             setCode(msg.code);
-    //             localStorage.setItem('gameCode', msg.code);
-    //             navigate('/waiting', { state: { socket, user } });
-    //             break;
-    //         case 'error':
-    //             alert(msg.message);
-    //             break;
-    //     }
-    // }
 
     function userChange(e) {
         setText(e.target.value);

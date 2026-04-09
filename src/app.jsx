@@ -14,27 +14,6 @@ import { useWS } from './ws/WebSocketContext';
 import { WebSocketProvider } from './ws/WebSocketContext';
 
 export default function App() {
-    // const [user, setUser] = React.useState(localStorage.getItem('username') || null);
-    // const [gameCode, setGameCode] = React.useState(localStorage.getItem('gameCode') || null);
-    // const [index, setIndex] = React.useState(0);
-    // const [answer, setAnswer] = React.useState('');
-    // const { lastMessage } = useWS();
-    // const navigate = useNavigate();
-
-    // React.useEffect(() => {
-    //     if (!lastMessage) return;
-    //     switch (lastMessage.type) {
-    //         case 'gameCreated':
-    //         case 'gameJoined':
-    //             console.log('App navigating to waiting');
-    //             navigate('/waiting');
-    //             break;
-    //         case 'yourTurn':
-    //             console.log('App navigating to game');
-    //             navigate('/game');
-    //             break;
-    //     }
-    // }, [lastMessage, navigate]);
 
     return (
         <WebSocketProvider>
@@ -79,11 +58,6 @@ function AppContent() {
                 console.log('App navigating to game');
                 navigate('/game');
                 break;
-            // case 'answer':
-            // case 'roundEnd':
-            //     console.log('App navigating to scoreboard');
-            //     navigate('/scoreboard');
-            //     break;
         }
     }, [lastMessage, navigate]);
 

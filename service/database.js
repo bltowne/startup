@@ -3,23 +3,11 @@ const config = require('./dbConfig.json');
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
-// const db = client.db('startup');
-// const userCollection = db.collection('user');
-// const codeCollection = db.collection('code');
-// const dataCollection = db.collection('data');
+
 let db;
 let userCollection;
 let codeCollection;
 let dataCollection;
-
-// (async function testConnection() {
-//   try {
-//     await db.command({ ping: 1 });
-//   } catch (ex) {
-//     console.log(`Unable to connect to database with ${url} because ${ex.message}`);
-//     process.exit(1);
-//   }
-// })();
 
 async function connectDB() {
   try {
@@ -57,14 +45,6 @@ async function updateUserRemoveAuth(user) {
   await userCollection.updateOne({ username: user.username }, { $unset: { token: 1} });
 }
 
-// async function addCode(game) {
-//   await codeCollection.insertOne(game);
-// }
-
-// function getCode(code) {
-//   return codeCollection.findOne({ code: code});
-// }
-
 async function addData(data) {
   await dataCollection.insertOne(data);
 }
@@ -79,8 +59,6 @@ module.exports = {
   addUser,
   updateUser,
   updateUserRemoveAuth,
-  // addCode,
-  // getCode,
   addData,
   getData,
 };

@@ -15,16 +15,6 @@ export function Scoreboard({ user }) {
     const oppName = oppAnswerObject ? oppAnswerObject.player : "Opponent";
     const oppAnswer = oppAnswerObject ? oppAnswerObject.answer : "";
 
-    // const [currentScore, setCurrentScore] = React.useState(() => {
-    //     const score = JSON.parse(localStorage.getItem('currentScore'));
-    //     return score || 0;
-    // });
-
-    // const [opponentScore, setOpponentScore] = React.useState(() => {
-    //     const score = JSON.parse(localStorage.getItem('opponentScore'));
-    //     return score || 0;
-    // });
-
     const highlight = {
         backgroundColor: "lightgreen",
     };
@@ -32,72 +22,6 @@ export function Scoreboard({ user }) {
     const opponentHighlight = {
         backgroundColor: "lightcoral"
     };
-
-    // const [opponentHighlightIndex, setOpponentHighlightIndex] = React.useState(null);
-
-    // React.useEffect(() => {
-    //     fetch('/api/data')
-    //         .then((response) => response.json())
-    //         .then((fetchedData) => {
-    //             setData(fetchedData);
-    //         });
-    // }, []);
-
-    // React.useEffect(() => {
-    //     if (!data) return;
-    //     if (myAnswer) {
-    //         for (let i = 0; i < data.answers.length; i++) {
-    //             if (myAnswer.toLowerCase() === data.answers[i].toLowerCase()) {
-    //                 const points = parseInt(data.points[i]);
-    //                 setCurrentScore(prevScore => {
-    //                     const newScore = prevScore + points;
-    //                     localStorage.setItem('currentScore', JSON.stringify(newScore));
-    //                     return newScore;
-    //                 });
-    //                 return;
-    //             }
-    //         }
-    //     }
-    //     if (oppAnswer) {
-    //         for (let i = 0; i < data.answers.length; i++) {
-    //             if (oppAnswer.toLowerCase() === data.answers[i].toLowerCase()) {
-    //                 const points = parseInt(data.points[i]);
-    //                 setOpponentScore(prevScore => {
-    //                     const newScore = prevScore + points;
-    //                     localStorage.setItem('opponentScore', JSON.stringify(newScore));
-    //                     return newScore;
-    //                 });
-    //             }
-    //         }
-    //     }
-    // }, [data, myAnswer, oppAnswer]);
-
-    // React.useEffect(() => {
-    //     if (!data[index]) return;
-
-    //     const timer = setTimeout(() => {
-    //         let newIndex = 5;
-    //         if (newIndex === index) {
-    //             newIndex = (newIndex + 1);
-    //         }
-    //         setOpponentHighlightIndex(newIndex);
-    //         const points = parseInt(data[index].points[5]) || 0;
-    //         setOpponentScore(prevScore => {
-    //             const newScore = prevScore + points;
-    //             localStorage.setItem('opponentScore', JSON.stringify(newScore));
-    //             return newScore;
-    //         });
-    //     }, 30000);
-
-    //     return () => clearTimeout(timer);
-    // }, [data, index]);
-
-    async function logout() {
-        await fetch('/api/auth/logout', {
-            method: 'DELETE',
-        });
-        navigate('/');
-    }
 
     function getQuestion() {
         return data?.question || "Loading question...";
@@ -123,6 +47,18 @@ export function Scoreboard({ user }) {
             return opponentHighlight;
         }
         return {};
+    }
+
+    const { send } = useWS();
+
+    function handleReady() {
+        navigate('/waiting');
+        send({ type: 'ready' });
+    }
+
+    function handleLogout() {
+        send({ type: 'logout' });
+        window.location.href = '/';
     }
 
     return (
@@ -173,7 +109,7 @@ export function Scoreboard({ user }) {
                 </tbody>
             </table>
             <br />
-            <input type="button" id="button" value="Ready for Next Round" onClick={() => navigate('/waiting')} />    <input type="button" id="button" value="Logout" onClick={logout} />
+            <input type="button" id="button" value="Ready for Next Round" onClick={handleReady} />    <input type="button" id="button" value="Logout" onClick={handleLogout} />
         </main>
     );
 }
