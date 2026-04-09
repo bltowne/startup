@@ -137,9 +137,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Prerequisites** - I completed all prerequisites (deploying Simon WebSocket, GitHub linked on home page, notes in this document, more than 10 commits)
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Prerequisites** - I completed all prerequisites (deploying Simon WebSocket, GitHub linked on home page, notes in this document, more than 10 commits)
+- [x] **Backend listens for WebSocket connection** - In peerProxy.js, the backend listens for a WebSocket connection.
+- [x] **Frontend makes WebSocket connection** - In WebSocketContext.jsx, the frontend makes a WebSocket connection.
+- [x] **Data sent over WebSocket connection** - Data including players, game codes, data submission selection, scores, and answers are all sent through the Websocket connection.
+- [x] **WebSocket data displayed** - The information about the names, scores, and answers the other player in the game submitted is displayed through the Websocket connection onto the scoreboard page.
+- [x] **Application is fully functional** - It's finally done. In addition to the items listed above, I also used websocket to create game rooms that allow for multiple multiplayer games to happen simultaneously. Everything is functional at this point.
